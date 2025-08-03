@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<style>
+    /* Flash Message Styles */
+    .flash-message {
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 16px;
+        text-align: center;
+        max-width: 450px;
+        margin: 10px auto;
+        position: relative;
+    }
+
+    .alert-success {
+        background-color: #dff0d8;
+        color: #3c763d;
+        border: 1px solid #d6e9c6;
+    }
+
+    .alert-error {
+        background-color: #f2dede;
+        color: #a94442;
+        border: 1px solid #ebccd1;
+    }
+
+    .alert-info {
+        background-color: #d9edf7;
+        color: #31708f;
+        border: 1px solid #bce8f1;
+    }
+
+    .flash-close {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .flash-close:hover {
+        color: #000;
+    }
+    /* Reduce width of navbar-toggler button on mobile view */
+@media (max-width: 768px) {
+    .navbar-toggler {
+        width: 55px; /* Reduce width */
+        height: 40px; /* Adjust height if needed */
+    }
+    .search-container input {
+        width: 280px; /* Fixed width for the search bar */
+        transition: none; /* Disable transition effect on focus */
+    }
+    .search-container input:focus {
+        width: 280px; /* Expanded width when focused */
+    }
+    .navbar-expanded .search-container input {
+        width:340px;  /* Expanded search bar width */
+    }
+}
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
+        <!-- Hamburger menu on the left -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <!-- Navbar Links -->
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-home" aria-hidden="true"></i> Home
+                </a>
+                <a class="navbar-brand" href="{{ url_for('chart') }}">
+                    <i class="fas fa-chart-line" aria-hidden="true"></i> Chart
+                </a>
+                <a class="navbar-brand" href="{{ url_for('reopen_cases') }}" style="min-width: 120px;">
+                    <i class="fas fa-history" aria-hidden="true"></i> Case History
+                </a>
+
+                <!-- Admin Dropdown (visible only for admins) -->
+                 <!--
+                {% if session.get('is_admin') %}
+                <div class="dropdown">
+                    <a class="btn btn-light dropdown-toggle navbar-brand" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Admin Menu">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('approve_users') }}">
+                            <i class="fas fa-user-check"></i> Approve Users
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('add_admin') }}">
+                            <i class="fas fa-user-plus"></i> Add Admin
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('manage_admins') }}">
+                            <i class="fas fa-users-cog"></i> Manage Admins
+                        </a>
+                        
+                    </div>
+                </div>
+                <a class="navbar-brand" href="{{ url_for('view_map') }}">
+                    <i class="fas fa-map-marked-alt"></i> View Map
+                </a>
+                {% endif %} -->
+            </ul>
+        </div>
+
+        <!-- Navbar Search Input -->
+        <div class="search-container ml-3">
+            <input type="text" id="navbarSearch" class="form-control" placeholder="Search Users..." aria-label="Search Users">
+        </div>
+        
+        <!-- User Info Dropdown -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="User Menu">
+                        <span>{{ current_user[0] }}</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        {% if is_admin %}
+                            <div class="dropdown-item">
+                                <strong>Name:</strong> {{ current_user[0] }}<br>
+                                <strong>Phone:</strong> {{ current_user[1] }}<br>
+                                <strong>Email:</strong> {{ current_user[2] }}<br>
+                                <strong>Id:</strong> {{ current_user[3] }}<br>
+                                <strong>Aadhar:</strong> {{ current_user[4] }}<br>
+                                <strong>Gender:</strong> {{ current_user[5] }}<br>
+                                <strong>State:</strong> {{ current_user[6] }}<br>
+                                <strong>District:</strong> {{ current_user[7] }}<br>
+                                <strong>Date-of-Birth:</strong> {{ current_user[8] }}<br>
+                            </div>
+                        {% else %}
+                            <div class="dropdown-item">
+                                <strong>Username:</strong> {{ current_user[0] }}<br>
+                                <strong>Phone:</strong> {{ current_user[1] }}<br>
+                                <strong>Email:</strong> {{ current_user[2] }}<br>
+                                <strong>State:</strong> {{ current_user[3] }}<br>
+                                <strong>District:</strong> {{ current_user[4] }}<br>
+                                <strong>Subdivision:</strong> {{ current_user[5] }}<br>
+                            </div>
+                        {% endif %}
+                        <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="handleLogout(event)">
+                            <strong><i class="fas fa-sign-out-alt"></i> Logout</strong>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>    
+    <div class="container mt-4">
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+        <h1 class="page-heading">Inbox</h1>
+        <div class="table-responsive">
+            <table id="userTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Case Id</th>
+                        <th>Subdivision</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users | reverse %}
+                    <tr onclick="window.location='{{ url_for('user_details', user_id=user.id) }}'" style="cursor: pointer;">
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.subdivision }}</td>
+                        <td>{{ user.upload_date.strftime('%a, %d %b %Y') }}</td>
+                        <td>{{ user.upload_time.strftime('%I:%M %p').lstrip("0") }}</td>
+                        <td>{{ user.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Toggle navbar-expanded class when the navbar is toggled
+$(document).ready(function() {
+    $('.navbar-toggler').click(function() {
+        $('body').toggleClass('navbar-expanded');  // Add or remove 'navbar-expanded' class to body
+    });
+});
+
+         // Search functionality for user table
+        document.getElementById('navbarSearch').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#userTable tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const matches = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(searchTerm));
+                row.style.display = matches ? '' : 'none';
+            });
+        });
+
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').onclick = function() {
+            document.body.classList.toggle('dark-mode');
+        };
+
+        // Logout handler
+        function handleLogout(event) {
+            event.stopPropagation(); 
+            window.location.href = "{{ url_for('logout') }}"; 
+        }
+
+        // Reverse the table rows on load
+        function reverseTableRows() {
+            const tbody = document.querySelector('#userTable tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.reverse().forEach(row => tbody.appendChild(row));
+        }
+
+        document.addEventListener('DOMContentLoaded', reverseTableRows);
+
+        
+    </script>
+
+</body>
+</html>

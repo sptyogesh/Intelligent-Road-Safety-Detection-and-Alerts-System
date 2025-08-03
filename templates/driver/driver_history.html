@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <title>Deleted Data</title>
+    <style>
+        *{
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th {
+                display: none; /* Hide header on small screens */
+            }
+
+            tr {
+                margin-bottom: 15px;
+            }
+
+            td {
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 10px;
+                text-align: left;
+                font-weight: bold;
+                color: #555;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('driver_dashboard') }}">Back to Dashboard</a>
+    </nav>
+    <h1>Deleted Driver's Details</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>District</th>
+                <th>Subdivision</th>
+                <th>Submission Date</th>
+                <th>Submission Time</th>
+                <th>Deletion Date</th>
+                <th>Deletion Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in deleted_data %}
+            <tr>
+                <td data-label="ID">{{ record[0] }}</td>
+                <td data-label="District">{{ record[2] }}</td>
+                <td data-label="Subdivision">{{ record[3] }}</td>
+                <td data-label="Submission Date">{{ record[8] }}</td>
+                <td data-label="Submission Time" class="upload-time">{{ record[9].strftime('%I:%M %p').lstrip("0") }}</td>
+                <td data-label="Deletion Date">{{ record[10] }}</td>
+                <td data-label="Deletion Time" class="upload-time">{{ record[11].strftime('%I:%M %p').lstrip("0") }}</td>
+                <td>
+                    <form action="{{ url_for('restore_driver', user_id=record[0]) }}" method="POST">
+                        <button type="submit">Restore</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {%if not deleted_data%}
+            <tr>
+                <td colspan="8" style="text-align:center;"> No Data Closed</td>
+            </tr>
+            {% endif%}
+        </tbody>
+    </table>
+    <script>
+        document.querySelectorAll('.upload-time').forEach(function(element) {
+            var uploadTime = element.textContent;
+            var timeParts = uploadTime.split(':');
+            if (timeParts.length >= 3) {
+                var formattedTime = timeParts[0] + ':' + timeParts[1] + ':' + timeParts[2].split('.')[0];
+                element.textContent = formattedTime;
+            }
+        });
+    </script>
+</body>
+</html>

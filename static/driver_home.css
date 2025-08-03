@@ -1,0 +1,393 @@
+/* Global Styles */
+:root {
+    --dark-slate: #2C3E50;
+    --light-gray: #ECF0F1;
+    --teal: #1ABC9C;
+    --muted-gray: #7F8C8D;
+    --blue: #3498DB;
+    --darker-blue: #2980B9;
+    --light-gray-bg: #EAEDED;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #f9f9f9;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, var(--dark-slate), #34495E);
+    color: var(--light-gray);
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation Styles */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+nav a {
+    color: var(--light-gray);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+nav a::after {
+    content: '';
+    display: block;
+    height: 2px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    width: 100%;
+    margin-top: 5px;
+}
+
+nav a:hover {
+    color: var(--teal);
+    transform: translateY(-2px);
+}
+
+nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* Mobile Menu Styles */
+.menu-toggle {
+    display: none; /* Hide menu toggle by default */
+    background: transparent;
+    border: none;
+    font-size: 2em; /* Larger icon size */
+    color: var(--light-gray);
+    cursor: pointer;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+.menu-toggle .bar {
+    display: block;
+    width: 30px; /* Width of bars */
+    height: 3px; /* Height of bars */
+    background-color: var(--light-gray);
+    margin: 4px 0; /* Space between bars */
+}
+
+/* Main Content */
+main {
+    padding: 40px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Hero Section */
+section.hero {
+    background-color: var(--light-gray-bg);
+    padding: 60px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+section.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(44, 62, 80, 0.1);
+    border-radius: 12px;
+    z-index: 0;
+}
+
+section.hero h1 {
+    position: relative;
+    z-index: 1;
+    font-size: 2.8em;
+    margin: 0;
+    color: #34495E;
+    letter-spacing: 1px;
+}
+
+section.hero p {
+    position: relative;
+    z-index: 1;
+    color: var(--muted-gray);
+    margin-top: 10px;
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
+/* Call to Action Button */
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.cta-button {
+    background: linear-gradient(45deg, var(--teal), #16A085);
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button:hover {
+    background: linear-gradient(45deg, #16A085, var(--teal));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cta-button:disabled {
+    background-color: #BDC3C7; /* Light gray */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Features Section */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px; /* Space between cards */
+    margin-top: 40px;
+}
+
+.feature-card {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s; /* Added background transition */
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    background-color: #f0f0f0; /* Lighten background on hover */
+}
+
+.feature-card h3 {
+    color: var(--dark-slate);
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: var(--muted-gray);
+    line-height: 1.5;
+}
+
+/* Alert and History Styles */
+.alert, .alert-history {
+    background: #FFFFFF;
+    border: 1px solid #BDC3C7;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.alert button, .alert-history button {
+    background-color: var(--blue);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.alert button:hover, .alert-history button:hover {
+    background-color: var(--darker-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Notification Toast Styles */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--blue);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0; /* Hidden by default */
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Footer Styles */
+footer {
+    background: linear-gradient(135deg, var(--dark-slate), #34495E);
+    color: var(--light-gray);
+    text-align: center;
+    padding: 15px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    nav ul {
+        display: none; /* Hide menu items by default */
+        flex-direction: column; /* Stack items vertically */
+        width: 100%;
+        background: var(--dark-slate);
+        position: absolute;
+        top: 15%; /* Adjust based on header height */
+        left: 0;
+        padding: 10px 0; /* Add padding */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
+        border-radius: 5px; /* Rounded corners */
+        align-items: center;
+        z-index: 999; /* Ensure menu appears above other elements */
+    }
+
+    nav ul.show {
+        display: flex; /* Show menu when toggled */
+    }
+
+    nav ul li {
+        padding: 10px 20px; /* Padding for menu items */
+        text-align: center; /* Center text */
+    }
+
+    .menu-toggle {
+        display: block; /* Show toggle button on mobile */
+    }
+
+    .features {
+        grid-template-columns: 1fr; /* Stack features vertically */
+    }
+
+    .feature-card {
+        margin: 10px 0; /* Space for vertical stacking */
+    }
+
+    .cta-button {
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+    }
+}
+
+/* Keyframes for animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Form Styles */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #BDC3C7;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+input:focus, textarea:focus {
+    border-color: var(--teal); /* Teal */
+    outline: none; /* Remove default outline */
+}
+
+/* Additional Button Variants */
+.btn-secondary {
+    background-color: var(--muted-gray);
+    color: white;
+    padding: 12px 20px;
+}
+
+.btn-secondary:hover {
+    background-color: #95A5A6; /* Darker gray */
+    transform: translateY(-2px);
+}
+
+/* Loading Animation */
+.loading {
+    animation: spin 1s linear infinite;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #333;
+    padding: 10px;
+}
+
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+}
+
+[data-theme='dark'] {
+    --background-color: #121212;
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Button animations */
+button {
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: #4CAF50; /* Example color change */
+}
+
+button:active {
+    transform: scale(0.98);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal transitions */
+.modal {
+    opacity: 0;
+    transform: translateY(-50px);
+    transition: all 0.3s ease-in-out;
+}
+
+.modal.show {
+    opacity: 1;
+    transform: translateY(0);
+}

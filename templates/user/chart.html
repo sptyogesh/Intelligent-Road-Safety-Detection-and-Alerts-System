@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        *{
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .dark-mode .navbar {
+            background-color: #1e1e1e;
+        }
+        .dark-mode .navbar-brand,
+        .dark-mode .nav-link,
+        .dark-mode .btn {
+            color: #ffffff;
+        }
+        .dark-mode table {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+        .dark-mode th {
+            background-color: #2c2c2c;
+        }
+        .dark-mode select,
+        .dark-mode input {
+            background-color: #333;
+            color: #fff;
+        }
+        .nav-link {
+            min-width: 120px;
+            white-space: nowrap;
+        }
+        #darkModeToggle {
+            min-width: 80px;
+            max-width:120px;
+            padding: 5px 10px;
+            flex-grow: 0;
+        }
+        .navbar-nav {
+            flex: 1;
+            justify-content: flex-start;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        .spinner-border {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        @media (max-width: 768px) {
+    .navbar-toggler {
+        width: 55px; /* Reduce width */
+        height: 40px; /* Adjust height if needed */
+    }
+    
+}
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+            <i class="fas fa-inbox"></i> Inbox
+        </a>
+        <!-- Case History Link (New) -->
+        <a class="navbar-brand" href="{{ url_for('reopen_cases') }}" style="min-width: 120px;">
+            <i class="fas fa-history"></i> Case History
+        </a>
+        {% if session.get('is_admin') %}
+        <div class="dropdown">
+            <a class="btn btn-light dropdown-toggle navbar-brand" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Admin Menu">
+                <i class="fas fa-user-shield"></i> Admin
+            </a>
+            <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                <a class="dropdown-item navbar-brand" href="{{ url_for('approve_users') }}">
+                    <i class="fas fa-user-check"></i> Approve Users
+                </a>
+                <a class="dropdown-item navbar-brand" href="{{ url_for('add_admin') }}">
+                    <i class="fas fa-user-plus"></i> Add Admin
+                </a>
+                <a class="dropdown-item navbar-brand" href="{{ url_for('manage_admins') }}">
+                    <i class="fas fa-users-cog"></i> Manage Admins
+                </a>
+                
+            </div>
+        </div>
+        <a class="navbar-brand" href="{{ url_for('view_map') }}">
+            <i class="fas fa-map-marked-alt"></i> View Map
+        </a>
+        {% endif %}
+</ul>
+</div> 
+</nav>
+
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="spinner-border text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+</div>
+
+<!-- Main Content -->
+<div class="container mt-4">
+    <h1>Reports & Analytics</h1>
+
+    <!-- Filters -->
+    <div class="filter-options mb-4 d-flex flex-column flex-md-row align-items-start">
+        <div class="form-group mr-md-2">
+            <label for="chartType" data-toggle="tooltip" title="Choose between Bar, Pie, or Line chart">Chart Type:</label>
+            <select id="chartType" class="form-control" aria-label="Select Chart Type">
+                <option value="bar">Bar Chart</option>
+                <option value="pie" selected>Pie Chart</option>
+                <option value="line">Line Chart</option>
+            </select>
+        </div>
+
+        <div class="form-group mr-md-2">
+            <label for="state" data-toggle="tooltip" title="Choose a state">State:</label>
+            <select id="state" class="form-control" aria-label="Select State">
+                <option value="all">All States</option>
+                {% for state in states %}
+                    <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="district" data-toggle="tooltip" title="Choose a district">District:</label>
+            <select id="district" class="form-control" aria-label="Select District">
+                <option value="all">All Districts</option>
+                {% for district in districts %}
+                    <option value="{{ district }}">{{ district }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Chart Container -->
+    <div class="chart-container">
+        <canvas id="uploadsChart"></canvas>
+    </div>
+
+    <!-- Download Button -->
+    <button id="downloadBtn" class="btn btn-primary mt-3">Download Chart</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.0.0/chartjs-plugin-zoom.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/0.7.0/chartjs-plugin-datalabels.min.js"></script>
+<script>
+    const ctx = document.getElementById('uploadsChart').getContext('2d');
+    let currentChartType = 'bar';
+
+    // Loading spinner toggle function
+    function toggleLoadingSpinner(show) {
+        const spinner = document.getElementById('loadingSpinner');
+        spinner.style.display = show ? 'block' : 'none';
+    }
+
+    // Random color generator for chart
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // Create a chart with new data
+    function createChart(data) {
+        const colors = data.labels.map(() => getRandomColor());
+        const config = {
+            type: currentChartType,
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: '# of Uploads',
+                    data: data.values,
+                    backgroundColor: currentChartType === 'pie' ? colors : colors.map(color => color + '66'),
+                    borderColor: currentChartType === 'line' ? colors : colors.map(color => color),
+                    borderWidth: currentChartType === 'line' ? 2 : 0,
+                    fill: currentChartType !== 'line'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    datalabels: {
+                        color: '#ffffff',
+                        font: { weight: 'bold' },
+                        anchor: 'end',
+                        align: 'start'
+                    },
+                    zoom: {
+                        pan: {
+                            enabled: true,
+                            mode: 'xy'
+                        },
+                        zoom: {
+                            enabled: true,
+                            mode: 'xy'
+                        }
+                    }
+                }
+            }
+        };
+        return new Chart(ctx, config);
+    }
+
+    let uploadsChart = createChart({
+        labels: {{ chart_data.labels|tojson|safe }},
+        values: {{ chart_data.data|tojson|safe }}
+    });
+
+    // Change chart type handler
+    document.getElementById('chartType').addEventListener('change', function() {
+        currentChartType = this.value;
+        uploadsChart.destroy();
+        uploadsChart = createChart({
+            labels: {{ chart_data.labels|tojson|safe }},
+            values: {{ chart_data.data|tojson|safe }}
+        });
+    });
+
+    // Dark mode toggle
+    document.getElementById('darkModeToggle').onclick = function() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    };
+
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // Download chart as PNG
+    document.getElementById('downloadBtn').onclick = function() {
+        const link = document.createElement('a');
+        link.href = uploadsChart.toBase64Image(); // Get the chart as a base64 image
+        link.download = 'chart.png'; // Set the download file name
+        link.click(); // Trigger the download
+    };
+
+    // Tooltip initialization
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    // Debounce filter changes to optimize performance
+    let debounceTimer;
+    $('#state, #district').on('change', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function() {
+            toggleLoadingSpinner(true); // Show loading spinner
+            const state = $('#state').val();
+            const district = $('#district').val();
+            // Fetch new chart data with AJAX (Replace with actual API endpoint)
+            $.ajax({
+                url: '/fetch-chart-data', 
+                method: 'GET',
+                data: { state, district },
+                success: function(response) {
+                    uploadsChart.destroy();
+                    uploadsChart = createChart(response.data);
+                    toggleLoadingSpinner(false); // Hide loading spinner
+                }
+            });
+        }, 300); // Delay of 300ms
+    });
+
+</script>
+
+</body>
+</html>

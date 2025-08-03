@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reopen Cases</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none;
+        }
+
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        body.dark-mode .navbar {
+            background-color: #1e1e1e;
+        }
+
+        body.dark-mode .navbar-brand,
+        body.dark-mode .nav-link,
+        body.dark-mode .btn {
+            color: #ffffff;
+        }
+
+        body.dark-mode table {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        body.dark-mode th {
+            background-color: #2c2c2c;
+        }
+
+        body.dark-mode input {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .navbar-light .nav-link {
+            color: #000;
+        }
+
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        .upload-time,
+        .date-column {
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        th,
+        td {
+            min-width: 100px;
+            font-size: 0.9rem;
+        }
+
+        .text-center {
+            color: black;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        /* Responsive Table */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: scroll;
+            }
+
+            .table th,
+            .table td {
+                white-space: nowrap;
+            }
+        }
+
+        /* Disabled Button Styling */
+        .disabled-button {
+            background-color: #ccc !important;
+            border-color: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed;
+        }
+
+        .disabled-button:hover {
+            background-color: #ccc !important;
+            border-color: #ccc !important;
+        }
+
+        /* Adjust search box and buttons */
+        .search-container {
+            max-width: 200px;
+        }
+
+        .dropdown-menu .dropdown-item {
+            color: black;
+            cursor: pointer;
+        }
+
+        /* Add margin to the search input field */
+        .search-container {
+            margin-right: 200px; /* Adjust as needed */
+        }
+        @media (max-width: 768px) {
+    .navbar-toggler {
+        width: 55px; /* Reduce width */
+        height: 40px; /* Adjust height if needed */
+    }
+    .search-container input {
+        width: 280px; /* Fixed width for the search bar */
+        transition: none; /* Disable transition effect on focus */
+    }
+    .search-container input:focus {
+        width: 280px; /* Expanded width when focused */
+    }
+    .navbar-expanded .search-container input {
+        width:340px;  /* Expanded search bar width */
+    }
+    .search-container {
+            margin-right: 100px; /* Adjust as needed */
+    }
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
+        <!-- Hamburger menu button for mobile -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Navbar Content that collapses on smaller screens -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                <!-- Inbox Link -->
+                <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-inbox"></i> Inbox
+                </a>
+                <!-- Chart Link -->
+                <a class="navbar-brand" href="{{ url_for('chart') }}">
+                    <i class="fas fa-chart-line"></i> Chart
+                </a>
+                
+                {% if session.get('is_admin') %}
+                <div class="dropdown">
+                    <a class="btn btn-light dropdown-toggle navbar-brand" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Admin Menu">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('approve_users') }}">
+                            <i class="fas fa-user-check"></i> Approve Users
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('add_admin') }}">
+                            <i class="fas fa-user-plus"></i> Add Admin
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('manage_admins') }}">
+                            <i class="fas fa-users-cog"></i> Manage Admins
+                        </a>
+                        
+                    </div>
+                </div>
+                <a class="navbar-brand" href="{{ url_for('view_map') }}">
+                    <i class="fas fa-map-marked-alt"></i> View Map
+                </a>
+                {% endif %}
+            </ul>
+        </div>   
+            
+            <!-- Search Input (aligned with other elements) -->
+            <div class="search-container ml-3">
+                <input type="text" id="caseSearch" class="form-control" placeholder="Search by Case ID or Name" aria-label="Search by Case ID or Name">
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Export Button Dropdown -->
+            <div class="btn-group ml-3 mb-2 mb-lg-0">
+                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" onclick="exportToExcel()">Export to Excel</a>
+                    <a class="dropdown-item" href="#" onclick="exportToPDF()">Export to PDF</a>
+                    <a class="dropdown-item" href="#" onclick="exportToCSV()">Export to CSV</a>
+                </div>
+            </div>
+            </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <h1>Reopen Cases</h1>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table id="reopenTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="sortable">Case ID</th>
+                        <th class="sortable">Name</th>
+                        <th class="sortable">Subdivision</th>
+                        <th class="sortable date-column">Report Date</th>
+                        <th class="sortable upload-time">Report Time</th>
+                        <th class="sortable date-column">Closed Date</th>
+                        <th class="sortable upload-time">Closed Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="caseTableBody">
+                    {% for case in cases | reverse %}
+                    <tr>
+                        <td>{{ case.id }}</td>
+                        <td>{{ case.name }}</td>
+                        <td>{{ case.subdivision }}</td>
+                        <td class="date-column">{{ case.upload_date.strftime('%a, %d %b %Y') }}</td>
+                        <td class="upload-time">{{ case.upload_time.strftime('%I:%M %p').lstrip("0") }}</td>
+                        <td class="date-column">{{ case.case_closed_date.strftime('%a, %d %b %Y') }}</td>
+                        <td class="upload-time">{{ case.case_closed_time.strftime('%I:%M %p').lstrip("0") }}</td>
+                        <td>
+                            <form action="{{ url_for('restore_case', case_id=case.id) }}" method="POST" id="confirmSubmitForm">
+                                <button type="button" class="btn btn-success reopenBtn"
+                                    data-id="{{ case.id }}"
+                                    data-name="{{ case.name }}"
+                                    data-subdivision="{{ case.subdivision }}"
+                                    data-upload-date="{{ case.upload_date }}"
+                                    data-upload-time="{{ case.upload_time.strftime('%I:%M %p').lstrip('0') }}"
+                                    data-closed-date="{{ case.case_closed_date }}"
+                                    data-closed-time="{{ case.case_closed_time.strftime('%I:%M %p').lstrip('0') }}">
+                                    Reopen
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% if not cases %}
+                    <tr>
+                        <td colspan="8" class="text-center">No closed cases found.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="reopenModal" tabindex="-1" role="dialog" aria-labelledby="reopenModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reopenModalLabel">Are you sure you want to reopen this case?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="caseDetails"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="confirmReopenBtn">Yes, Reopen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+                // Toggle navbar-expanded class when the navbar is toggled
+$(document).ready(function() {
+    $('.navbar-toggler').click(function() {
+        $('body').toggleClass('navbar-expanded');  // Add or remove 'navbar-expanded' class to body
+    });
+});
+        // Sorting functionality
+        document.querySelectorAll('.sortable').forEach(function(th) {
+            th.addEventListener('click', function() {
+                const columnIndex = Array.from(th.parentNode.children).indexOf(th);
+                sortTable(columnIndex);
+            });
+        });
+
+        function sortTable(columnIndex) {
+            const rows = Array.from(document.querySelectorAll('#reopenTable tbody tr'));
+            const isNumeric = columnIndex === 0 || columnIndex === 3 || columnIndex === 5;
+
+            rows.sort((a, b) => {
+                const aText = a.children[columnIndex].textContent.trim();
+                const bText = b.children[columnIndex].textContent.trim();
+                return isNumeric
+                    ? aText - bText
+                    : aText.localeCompare(bText);
+            });
+
+            const tbody = document.querySelector('#reopenTable tbody');
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Search functionality (Case ID or Name)
+        document.getElementById('caseSearch').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#reopenTable tbody tr');
+            rows.forEach(function(row) {
+                const caseId = row.cells[0].textContent.toLowerCase();
+                const name = row.cells[1].textContent.toLowerCase();
+                row.style.display = (caseId.includes(query) || name.includes(query)) ? '' : 'none';
+            });
+        });
+
+        // Export to Excel
+        function exportToExcel() {
+            let table = document.getElementById("reopenTable");
+            let html = table.outerHTML;
+            let uri = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            let link = document.createElement('a');
+            link.href = uri;
+            link.download = 'reopened_cases.xlsx';
+            link.click();
+        }
+
+        // Export to PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.autoTable({ html: '#reopenTable' });
+            doc.save('reopened_cases.pdf');
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            let csv = 'Case ID, Name, Subdivision, Report Date, Report Time, Closed Date, Closed Time\n';
+            const rows = document.querySelectorAll('#reopenTable tbody tr');
+            rows.forEach(function(row) {
+                const cells = row.querySelectorAll('td');
+                const rowData = Array.from(cells).map(cell => cell.textContent).join(',');
+                csv += rowData + '\n';
+            });
+            const link = document.createElement('a');
+            link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+            link.download = 'reopened_cases.csv';
+            link.click();
+        }
+
+            document.querySelectorAll('.reopenBtn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Get case data from the button's data attributes
+                    const caseData = {
+                        id: button.getAttribute('data-id'),
+                        name: button.getAttribute('data-name'),
+                        subdivision: button.getAttribute('data-subdivision'),
+                        uploadDate: button.getAttribute('data-upload-date'),
+                        uploadTime: button.getAttribute('data-upload-time'),
+                        closedDate: button.getAttribute('data-closed-date'),
+                        closedTime: button.getAttribute('data-closed-time')
+                    };
+            
+                    // Populate the modal with case data
+                    const caseDetails = ` 
+                        <strong>Case ID:</strong> ${caseData.id}<br> 
+                        <strong>Name:</strong> ${caseData.name}<br>
+                        <strong>Subdivision:</strong> ${caseData.subdivision}<br>
+                        <strong>Report Date:</strong> ${caseData.uploadDate}<br>
+                        <strong>Report Time:</strong> ${caseData.uploadTime}<br>
+                        <strong>Closed Date:</strong> ${caseData.closedDate}<br>
+                        <strong>Closed Time:</strong> ${caseData.closedTime}
+                    `;
+                    document.getElementById('caseDetails').innerHTML = caseDetails;
+            
+                    // Show the modal
+                    $('#reopenModal').modal('show');
+            
+                    // Handle confirmation by submitting the form in the same row as the clicked button
+                    document.getElementById('confirmReopenBtn').onclick = function() {
+                        // Find the form in the same row and submit it
+                        button.closest('form').submit();
+                        $('#reopenModal').modal('hide');
+                    };
+                });
+            });
+        
+            
+    </script>
+
+</body>
+
+</html>

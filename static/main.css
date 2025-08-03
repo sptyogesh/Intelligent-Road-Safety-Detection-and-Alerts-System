@@ -1,0 +1,365 @@
+/* Global Variables */
+:root {
+    --primary-color: #004d99;  /* Navy Blue */
+    --secondary-color: #0288d1; /* Light Blue */
+    --highlight-color: #ffcc00; /* Subtle Golden Yellow */
+    --background-color: #f5f5f5;  /* Light Gray */
+    --text-color: #333333;  /* Dark Gray */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern Font */
+    --border-radius: 8px;  /* Border Radius */
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-dark: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* General Styles */
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+    scroll-behavior: smooth;
+    transition: background-color 0.3s;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--highlight-color);
+}
+
+/* Navbar */
+.navbar {
+    background-color: #333333;  /* Dark Background */
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar a {
+    color: white;
+    font-size: 16px;
+    margin-left: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: var(--highlight-color); /* Golden Yellow */
+}
+
+/* Containers */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow-light);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.container:hover {
+    box-shadow: var(--shadow-dark);
+    transform: translateY(-5px);
+}
+
+/* Typography */
+h1.page-heading {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.5em;
+    margin-top: 40px;
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: var(--border-radius);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 16px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 5px var(--secondary-color);
+    outline: none;
+}
+
+/* Buttons */
+button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--secondary-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #026ba3;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f9f9f9; /* Subtle Hover Effect */
+    cursor: pointer;
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 700px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    cursor: pointer;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .navbar {
+    background-color: #222222; /* Darker Navbar */
+}
+
+body.dark-mode .container {
+    background-color: #333333;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode input[type="text"]:focus,
+body.dark-mode input[type="email"]:focus,
+body.dark-mode input[type="password"]:focus {
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 5px var(--highlight-color);
+}
+
+body.dark-mode button {
+    background-color: var(--secondary-color);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--highlight-color);
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--highlight-color);
+    color: #fff;
+    text-align: center;
+    border-radius: var(--border-radius);
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: var(--border-radius);
+    color: #fff;
+}
+
+.alert.success {
+    background-color: var(--secondary-color);
+}
+
+.alert.error {
+    background-color: #e74c3c;
+}
+
+.alert.warning {
+    background-color: #f39c12;
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Layout */
+@media (max-width: 375px) {
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    h1.page-heading {
+        font-size: 1.8em;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 85%;
+        padding: 15px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h1.page-heading {
+        font-size: 2.2em;
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+}
+
+@media (min-width: 1281px) {
+    .container {
+        width: 80%;
+        padding: 25px;
+    }
+
+    h1.page-heading {
+        font-size: 2.5em;
+    }
+}
+
+/* Increase the width of the search bar in the navbar */
+.search-container input {
+    width: 350px; /* Adjust width as per your preference */
+    transition: width 0.3s ease; /* Smooth transition effect when changing width */
+}
+
+.search-container input:focus {
+    width: 400px; /* Make it wider when focused, if desired */
+}

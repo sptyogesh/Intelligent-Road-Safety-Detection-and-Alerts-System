@@ -1,0 +1,471 @@
+/* CSS Variables for Colors */
+:root {
+    --primary-color: #007bff; /* Slightly darker blue */
+    --secondary-color: #f8f9fa; /* Soft light gray */
+    --accent-color: #28a745; /* Success color */
+    --error-color: #dc3545; /* Error color */
+    --border-color: #d1d1d1; /* Soft border color */
+    --text-color: #343a40; /* Darker text color */
+    --card-background: #ffffff; /* Card background */
+    --shadow-color: rgba(0, 0, 0, 0.2); /* Slightly darker shadow */
+    --font-family: 'Arial', sans-serif; /* Clean font */
+}
+
+/* Body and General Styles */
+body {
+    background-color: var(--secondary-color);
+    font-family: var(--font-family);
+    color: var(--text-color);
+    padding: 20px;
+    line-height: 1.5;
+}
+
+.container {
+    margin-top: 10px;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 40px var(--shadow-color);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: 'Arial', sans-serif; /* Example font */
+    text-transform: uppercase;
+    line-height: 1.5;
+}
+
+/* Form Control Styles */
+.form-control {
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 15px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    background-color: rgba(0, 123, 255, 0.1); /* Light background on focus */
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 15px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 3px 15px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px);
+}
+
+/* Drag & Drop Area */
+.drag-drop-area {
+    border: 3px dashed var(--primary-color);
+    padding: 10px;
+    text-align: center;
+    margin-top: 2px;
+    border-radius: 15px;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%; /* Fill the width of the container */
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+}
+
+
+.drag-drop-area:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    transform: scale(1.02);
+}
+
+/* Modal Styles */
+.modal-content {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px var(--shadow-color);
+}
+
+.modal-header {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1.75rem; /* Larger modal header */
+}
+
+/* Image and Video Previews */
+.preview-image,
+.preview-video {
+    width: 100%; /* Full width of the parent */
+    height: 200px; /* Fixed height for uniformity */
+    object-fit: cover; /* Maintain aspect ratio */
+    border-radius: 8px; /* Rounded corners */
+}
+
+/* Remove File Button */
+.remove-file {
+    cursor: pointer;
+    color: var(--error-color);
+    font-weight: bold;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+/* Label for Required Fields */
+.label-required:after {
+    content: " *";
+    color: var(--error-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+}
+
+/* File Preview Container */
+#previewFilesContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid */
+    gap: 10px; /* Space between items */
+    margin-top: 10px; /* Margin for spacing */
+}
+
+/* Fade-in Animation for Modals */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.modal.show .modal-dialog {
+    transform: translate(0, 0);
+    opacity: 1;
+}
+
+/* File Preview Styles */
+.preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px; /* Space between items */
+}
+
+.file-preview {
+    position: relative;
+    border-radius: 12px; /* Rounded corners */
+    overflow: hidden; /* Clip overflow */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    height: 220px; /* Fixed height for file preview container */
+}
+
+.file-preview:hover {
+    transform: scale(1.02); /* Slight zoom on hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Remove Button Styles */
+.btn-remove {
+    display: inline-block;
+    background-color: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 50%; /* Fully round shape */
+    width: 30px; /* Fixed width */
+    height: 30px; /* Fixed height */
+    font-size: 14px; /* Adjust font size as needed */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    position: absolute; /* Position it in the corner */
+    bottom: 10px; /* Align to the bottom */
+    right: 10px; /* Align to the right */
+    display: flex; /* Center icon */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+.btn-remove:hover {
+    background-color: darkred; /* Darker red on hover */
+}
+.btn {
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+.drag-drop-area:focus {
+    outline: 2px dashed var(--primary-color);
+    outline-offset: -2px; /* Adjust spacing */
+}
+/* Select Element Styles */
+.select-custom {
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 10px 30px 10px 15px; /* Add extra padding on the right for the arrow */
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: var(--secondary-color);
+    appearance: none; /* Remove default styling */
+    -webkit-appearance: none; /* Safari */
+    -moz-appearance: none; /* Firefox */
+    position: relative;
+    height: 45px; /* Adjust height as needed */
+}
+
+/* Custom Arrow Icon */
+.select-custom::after {
+    content: '▼'; /* Downward arrow */
+    position: absolute;
+    right: 10px; /* Position it to the right */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust vertical alignment */
+    color: var(--text-color);
+    pointer-events: none; /* Prevent mouse events */
+    font-size: 1.2rem; /* Increase size for visibility */
+}
+
+/* Hover and Focus States */
+.select-custom:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.select-custom:focus {
+    border-color: var(--primary-color);
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Shadow effect on focus */
+}
+
+/* Options Styles */
+.select-custom option {
+    padding: 10px; /* Padding for options */
+    background-color: white; /* Background for dropdown options */
+    color: var(--text-color); /* Text color for options */
+    font-size: 1rem; /* Match font size with select */
+    line-height: 1.5; /* Line height for better spacing */
+}
+
+/* Special styles for the placeholder option */
+.select-custom option:disabled {
+    color: var(--error-color); /* Optional: style for the disabled option */
+    font-weight: bold; /* Optional: make it stand out */
+}
+
+
+
+
+/* Overlay styling upload and cancel style*/
+#progressOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* 70% Transparent Black */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.progress-overlay-content {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+    font-family: Arial, sans-serif;
+}
+
+.progress-overlay-content p {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.progress {
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 20px;
+}
+
+.progress-bar {
+    background-color: #4CAF50;
+    width: 0%;
+    height: 100%;
+    color: #ffffff;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    border-radius: 20px 0 0 20px;
+    transition: width 0.4s ease; /* Smooth animation */
+}
+
+/* Loading text animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.progress-overlay-content p span {
+    animation: pulse 1s infinite;
+}
+
+.cancel-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #f44336;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+    background-color: #d32f2f;
+}
+
+
+/* navigation and its multi progress bar*/
+
+
+nav {
+    background-color: #1A73E8;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 10px 0;
+}
+
+nav .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav .nav-logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    font-family: 'Merriweather', serif;
+}
+
+nav .nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+nav .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+nav .nav-links a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+
+/* Heading */
+h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #212121;
+    font-family: 'Merriweather', serif;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Hamburger Icon (Visible on mobile) */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 24px;
+    width: 30px;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 30px;
+    height: 4px;
+    background-color: white;
+    border-radius: 2px;
+    transition: transform 0.3s ease;
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+    nav .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 15px;
+        background-color: #1A73E8;
+        width: 200px;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    nav .nav-links a {
+        font-size: 18px;
+        padding: 10px;
+        color: white;
+    }
+
+    nav .hamburger {
+        display: flex;
+    }
+
+    nav .nav-links.active {
+        display: flex;
+    }
+}
+
+
+/* Sticky navigation */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 0;
+    z-index: 1000;
+}  

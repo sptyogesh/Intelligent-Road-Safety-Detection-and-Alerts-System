@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Stay updated on road safety alerts, hazards, and travel tips with our Road Safety App.">
+    <meta name="keywords" content="road safety, alerts, travel tips, navigation">
+    <title>Road Safety App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='driver_home.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        /* Profile details container */
+        .profile-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .profile-container button {
+            background-color: transparent;
+            border: none;
+            font-size: 16px;
+            color: #007bff;
+            cursor: pointer;
+        }
+        .profile-details {
+            display: none;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .profile-details p {
+            margin: 5px 0;
+        }
+        /* Close button (cross mark) style */
+        .close-btn {
+            background-color: transparent;
+            border: none;
+            font-size: 24px;
+            color: #d9534f;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .logout-btn {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaaBb7KEn9zXF7kKAoeaFSbAqxkA_FBnk"></script>
+</head>
+<body>
+    
+    <header>
+        <h1>Road Safety Alerts</h1>
+        <nav role="navigation">
+            <div class="menu-toggle" aria-expanded="false">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('driver_dashboard') }}">Home</a></li>
+                <li><a href="{{ url_for('driver_notify') }}">Notifications</a></li>
+                <li><a href="{{ url_for('driver_history') }}">History</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="profile-container">
+        <button id="profileButton">Profile</button>
+        <div class="profile-details" id="profileDetails">
+            <button class="close-btn" id="closeProfile">&times;</button>
+            <p><strong>Name:</strong> {{ driver_details['name'] }}</p>
+            <p><strong>Email:</strong> {{ driver_details['email'] }}</p>
+            <p><strong>Phone:</strong> {{ driver_details['phone'] }}</p>
+            <p><strong>State:</strong> {{ driver_details['state'] }}</p>
+            <p><strong>District:</strong> {{ driver_details['district'] }}</p>
+            <p><strong>Subdivision:</strong> {{ driver_details['subdivision'] }}</p>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="alert-{{ category }}" aria-live="polite">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+
+    <main>
+        <section class="hero">
+            <h2>Welcome to the Driver Interface of the Intelligent Road Safety Detection and Alerts System!</h2>
+            <p>Your safety on the road is our top priority...</p>
+            <a href="{{ url_for('driver_notify') }}" class="cta-button">Get Alerts</a>
+        </section>
+        <div id="map"></div>
+    </main>
+
+    <footer>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const profileButton = document.getElementById('profileButton');
+            const profileDetails = document.getElementById('profileDetails');
+            const closeProfile = document.getElementById('closeProfile');
+            const logoutButton = document.querySelector('.logout-btn');
+
+            // Toggle profile details visibility
+            profileButton.addEventListener('click', function() {
+                profileDetails.style.display = profileDetails.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Close profile details when cross button is clicked
+            closeProfile.addEventListener('click', function() {
+                profileDetails.style.display = 'none';
+            });
+
+            // Close menu when clicking outside
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('nav ul');
+
+            menuToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('show');
+                const expanded = navMenu.classList.contains('show');
+                menuToggle.setAttribute('aria-expanded', expanded);
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!navMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                    navMenu.classList.remove('show');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='driver_home.js') }}"></script>
+    <script src="{{ url_for('static', filename='driver_map.js') }}"></script>
+
+</body>
+</html>

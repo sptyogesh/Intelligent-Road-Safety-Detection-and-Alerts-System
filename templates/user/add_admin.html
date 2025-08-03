@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        <style>
+            /* Add your custom CSS styles here */
+    
+            .form-control.is-invalid {
+                border-color: red;
+            }
+            
+            .invalid-feedback {
+                color: red;
+                display: none;
+            }
+    
+            /* Styles for the alert */
+            .alert {
+                border-radius: 10px;
+                opacity: 0;
+                animation: fadeIn 0.5s forwards;
+            }
+    
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+    
+            /* Styling for button and form */
+            .btn-primary {
+                background: linear-gradient(to right, #007bff, #0056b3);
+                border: none;
+                transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+            }
+    
+            .btn-primary:hover {
+                background-color: #0056b3;
+                transform: scale(1.05);
+            }
+    
+            /* Disabled button */
+            .disabled-button {
+                background-color: #ccc !important;
+                border-color: #ccc !important;
+                color: #666 !important;
+                cursor: not-allowed;
+            }
+
+         @media (max-width: 768px) {
+    .navbar-toggler {
+        width: 55px; /* Reduce width */
+        height: 40px; /* Adjust height if needed */
+    }
+    .search-container input {
+        width: 280px; /* Fixed width for the search bar */
+        transition: none; /* Disable transition effect on focus */
+    }
+    .search-container input:focus {
+        width: 280px; /* Expanded width when focused */
+    }
+    .navbar-expanded .search-container input {
+        width:340px;  /* Expanded search bar width */
+    }
+}
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            scroll-behavior: smooth;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .navbar-light .nav-link {
+            color: #000;
+        }
+
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        .upload-time,
+        .date-column {
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        th,
+        td {
+            min-width: 100px;
+            font-size: 0.9rem;
+        }
+
+        .text-center {
+            color: black;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        /* Responsive Table */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: scroll;
+            }
+
+            .table th,
+            .table td {
+                white-space: nowrap;
+            }
+        }
+
+        /* Disabled Button Styling */
+        .disabled-button {
+            background-color: #ccc !important;
+            border-color: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed;
+        }
+
+        .disabled-button:hover {
+            background-color: #ccc !important;
+            border-color: #ccc !important;
+        }
+
+        /* Adjust search box and buttons */
+        .search-container {
+            max-width: 200px;
+        }
+
+        .dropdown-menu .dropdown-item {
+            color: black;
+            cursor: pointer;
+        }
+        /* General input field styling */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-group-text {
+    border-radius: 0 0.25rem 0.25rem 0;
+    cursor: pointer;
+}
+
+.input-group-text:hover {
+    background-color: #f1f1f1;
+}
+
+.container {
+    background-color: rgba(238, 232, 232, 0.26);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin-top: 50px;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(to right, #007bff, #0056b3);
+    border: none;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Alert message fade-in */
+.alert {
+    border-radius: 10px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 576px) {
+    .container {
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .form-control {
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        font-size: 0.875rem;
+        padding: 10px 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <a class="navbar-brand" href="javascript:history.back()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-inbox"></i> Inbox
+                </a>
+                <a class="navbar-brand" href="{{ url_for('chart') }}">
+                    <i class="fas fa-chart-line"></i> Chart
+                </a>
+                {% if session.get('is_admin') %}
+                <div class="dropdown">
+                    <a class="btn btn-light dropdown-toggle navbar-brand" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Admin Menu">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('approve_users') }}">
+                            <i class="fas fa-user-check"></i> Approve Users
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('manage_admins') }}">
+                            <i class="fas fa-users-cog"></i> Manage Admins
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                <a class="navbar-brand" href="{{ url_for('reopen_cases') }}" style="min-width: 120px;">
+                    <i class="fas fa-history"></i> Case History
+                </a>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <h1 class="text-center mb-4">Add New Admin</h1>
+        
+        {% if error %}
+            <div class="alert alert-danger mt-4" role="alert">
+                {{ error }}
+            </div>
+        {% elif success %}
+            <div class="alert alert-success mt-4" role="alert">
+                {{ success }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('add_admin') }}" id="adminForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" id="phone" name="phone" class="form-control" required>
+                <div class="invalid-feedback">Enter Valid Number.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+                <div class="invalid-feedback">Invalid email format.</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="employee" class="form-label">Employee Id</label>
+                <input type="text" id="employee" name="employee" class="form-control" required>
+                <div class="invalid-feedback">Employee ID must contain only numbers and be up to 12 digits.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="aadhar" class="form-label">Aadhar No</label>
+                <input type="text" id="aadhar" name="aadhar" class="form-control" required>
+                <div class="invalid-feedback">Aadhar number must be only digits and 16 digits max.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" class="form-control" required>
+                    <option value="" selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="state">State</label>
+                <select id="state" name="state" class="form-control" required>
+                    <option value="" disabled selected>Select State</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="district">District</label>
+                <select id="district" name="district" class="form-control" required>
+                    <option value="" disabled selected>Select District</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date-of-Birth</label>
+                <input type="date" id="dob" name="dob" class="form-control" required>
+                <div class="invalid-feedback">You must be at least 18 years old.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" class="form-control" required>
+                    <button type="button" class="btn btn-light input-group-text" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="invalid-feedback">Password must be at least 8 characters, containing at least one letter, one number, and one symbol.</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                    <button type="button" class="btn btn-light input-group-text" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="invalid-feedback">Passwords do not match.</div>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Create Admin</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+
+    <!-- Bootstrap JS (for alert close functionality) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            var passwordField = document.getElementById('password');
+            var type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            var confirmPasswordField = document.getElementById('confirm_password');
+            var type = confirmPasswordField.type === 'password' ? 'text' : 'password';
+            confirmPasswordField.type = type;
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
+        // Convert email to lowercase
+        document.getElementById('email').addEventListener('input', function() {
+            this.value = this.value.toLowerCase();
+        });
+
+        document.getElementById('phone').addEventListener('input', function (e) {
+            var x = e.target.value.replace(/\D/g, '');
+            
+            if (x.length > 0 && !/^[6789]/.test(x)) {
+                x = x.substring(1);
+            }
+            
+            e.target.value = x.slice(0, 10);
+        });
+
+        // Employee ID: Only numbers, max 12 digits
+        document.getElementById('employee').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, ''); // Only numbers
+            if (this.value.length > 12) {
+                this.value = this.value.slice(0, 12);  // Limit to 12 digits
+            }
+        });
+
+        // Aadhar Number: Only numbers, max 16 digits
+        document.getElementById('aadhar').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, ''); // Only numbers
+            if (this.value.length > 16) {
+                this.value = this.value.slice(0, 16);  // Limit to 16 digits
+            }
+        });
+
+        // Validate DOB to ensure age is 18 or above
+        document.getElementById('dob').addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+            const month = today.getMonth() - dob.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            if (age < 18) {
+                this.setCustomValidity('You must be at least 18 years old.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Password validation for strength
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]:;"'<>,.?/-]).{8,}$/;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (!regex.test(password)) {
+                this.setCustomValidity('Password must be at least 8 characters, containing one letter, one number, and one special symbol.');
+            } else {
+                this.setCustomValidity('');
+            }
+
+            // Check if confirm password matches password
+            if (password !== confirmPassword) {
+                document.getElementById('confirm_password').setCustomValidity('Passwords do not match');
+            } else {
+                document.getElementById('confirm_password').setCustomValidity('');
+            }
+        });
+
+        document.getElementById('confirm_password').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            if (this.value !== password) {
+                this.setCustomValidity('Passwords do not match');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Form submit validation
+        document.getElementById('adminForm').addEventListener('submit', function(e) {
+            const form = this;
+            const inputs = form.querySelectorAll('.form-control');
+            inputs.forEach(function(input) {
+                if (!input.validity.valid) {
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (form.querySelectorAll('.is-invalid').length > 0) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

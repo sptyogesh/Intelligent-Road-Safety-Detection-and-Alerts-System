@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>401 - Unauthorized</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600;900&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/4b9ba14b0f.js" crossorigin="anonymous"></script>
+  <style>
+    /* Base Styles */
+    body {
+      background-color: #95c2de;
+      font-family: 'Nunito Sans', sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .mainbox {
+      background-color: #95c2de;
+      margin: auto;
+      height: 600px;
+      width: 600px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .err {
+      color: #ffffff;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 11rem;
+      position: absolute;
+      left: 20%;
+      top: 8%;
+    }
+
+    .far {
+      position: absolute;
+      font-size: 8.5rem;
+      left: 42%;
+      top: 15%;
+      color: #ffffff;
+    }
+
+    .err2 {
+      color: #ffffff;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 11rem;
+      position: absolute;
+      left: 68%;
+      top: 8%;
+    }
+
+    .msg {
+      text-align: center;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 1.3rem;
+      position: absolute;
+      left: 16%;
+      top: 45%;
+      width: 75%;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive styling */
+    @media (max-width: 768px) {
+      .err, .err2 {
+        font-size: 8rem;  /* Reduce font size for smaller screens */
+      }
+
+      .far {
+        font-size: 6rem;  /* Reduce icon size */
+      }
+
+      .msg {
+        font-size: 1.4rem;  /* Adjust message font size */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .err, .err2 {
+        font-size: 6rem;  /* Further reduce for very small screens */
+      }
+
+      .far {
+        font-size: 5rem;  /* Adjust icon size further */
+      }
+
+      .msg {
+        font-size: 1.2rem;  /* Adjust message font size further */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mainbox">
+    <div class="err">4</div>
+    <i class="far fa-question-circle fa-spin"></i>
+    <div class="err2">1</div>
+    <div class="msg"><br>
+  Oops! You’re not authorized to view this page.<br>
+  Please check your credentials and try again.<p>If you think this is a mistake, <a href="#">contact support</a>.</p>
+</div>
+
+  </div>
+
+</body>
+</html>

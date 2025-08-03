@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>400 - Bad Request</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700" rel="stylesheet">
+  <!-- GSAP Animation Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      overflow: hidden;
+      background-color: #f4f6ff;
+    }
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", sans-serif;
+      position: relative;
+      left: 6vmin;
+      text-align: center;
+    }
+    
+    .cog-wheel1, .cog-wheel2 {
+      transform: scale(0.7);
+    }
+
+    .cog1, .cog2 {
+      width: 40vmin;
+      height: 40vmin;
+      border-radius: 50%;
+      border: 6vmin solid #f3c623;
+      position: relative;
+    }
+
+    .cog2 {
+      border: 6vmin solid #4f8a8b;
+    }
+
+    .top, .down, .left, .right, .left-top, .left-down, .right-top, .right-down {
+      width: 10vmin;
+      height: 10vmin;
+      background-color: #f3c623;
+      position: absolute;
+    }
+
+    .cog2 .top, .cog2 .down, .cog2 .left, .cog2 .right, .cog2 .left-top, .cog2 .left-down, .cog2 .right-top, .cog2 .right-down {
+      background-color: #4f8a8b;
+    }
+
+    .top {
+      top: -14vmin;
+      left: 9vmin;
+    }
+
+    .down {
+      bottom: -14vmin;
+      left: 9vmin;
+    }
+
+    .left {
+      left: -14vmin;
+      top: 9vmin;
+    }
+
+    .right {
+      right: -14vmin;
+      top: 9vmin;
+    }
+
+    .left-top {
+      transform: rotateZ(-45deg);
+      left: -8vmin;
+      top: -8vmin;
+    }
+
+    .left-down {
+      transform: rotateZ(45deg);
+      left: -8vmin;
+      top: 25vmin;
+    }
+
+    .right-top {
+      transform: rotateZ(45deg);
+      right: -8vmin;
+      top: -8vmin;
+    }
+
+    .right-down {
+      transform: rotateZ(-45deg);
+      right: -8vmin;
+      top: 25vmin;
+    }
+
+    .cog2 {
+      position: relative;
+      left: -10.2vmin;
+      bottom: 10vmin;
+    }
+
+    h1 {
+      color: #142833;
+    }
+
+    .first-four {
+      position: relative;
+      left: 6vmin;
+      font-size: 40vmin;
+    }
+
+    .second-four {
+      position: relative;
+      right: 18vmin;
+      z-index: -1;
+      font-size: 40vmin;
+    }
+
+    .wrong-para {
+      font-family: "Montserrat", sans-serif;
+      position: absolute;
+      bottom: 15vmin;
+      padding: 3vmin 12vmin 3vmin 3vmin;
+      font-weight: 600;
+      color: #092532;
+    }
+    /* Styling for the Home button */
+.home-btn {
+  position: absolute;
+  bottom: 10vmin;  /* Position the button near the bottom */
+  left: 47.7%;      /* Center it horizontally */
+  transform: translateX(-50%); /* Ensure the button is perfectly centered */
+}
+
+.home-btn button {
+  background-color: #4f8a8b; /* Button background color */
+  color: white; /* Text color */
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  padding: 1vmin 3vmin;
+  font-size: 3vmin;
+  border: none;
+  border-radius: 5vmin;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home-btn button:hover {
+  background-color: #3a6b6f; /* Button hover effect */
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="first-four">4</h1>
+    <div class="cog-wheel1">
+      <div class="cog1">
+        <div class="top"></div>
+        <div class="down"></div>
+        <div class="left-top"></div>
+        <div class="left-down"></div>
+        <div class="right-top"></div>
+        <div class="right-down"></div>
+        <div class="left"></div>
+        <div class="right"></div>
+      </div>
+    </div>
+    
+    <div class="cog-wheel2">
+      <div class="cog2">
+        <div class="top"></div>
+        <div class="down"></div>
+        <div class="left-top"></div>
+        <div class="left-down"></div>
+        <div class="right-top"></div>
+        <div class="right-down"></div>
+        <div class="left"></div>
+        <div class="right"></div>
+      </div>
+    </div>
+
+    
+    <p class="wrong-para">Uh Oh! Bad Request!</p>
+    <!-- Home Button -->
+<a href="/" class="home-btn">
+  <button>Go to Home</button>
+</a>
+
+  </div>
+
+  <script>
+    // GSAP Timeline for animations
+    let t1 = gsap.timeline();
+    let t2 = gsap.timeline();
+    let t3 = gsap.timeline();
+
+    // Rotate the first cogwheel (cog1)
+    t1.to(".cog1", {
+      transformOrigin: "50% 50%",
+      rotation: "+=360",
+      repeat: -1,
+      ease: "linear",
+      duration: 8
+    });
+
+    // Rotate the second cogwheel (cog2) in the opposite direction
+    t2.to(".cog2", {
+      transformOrigin: "50% 50%",
+      rotation: "-=360",
+      repeat: -1,
+      ease: "linear",
+      duration: 8
+    });
+
+    // Fade in and out the "Uh Oh!" message
+    t3.fromTo(".wrong-para", {
+      opacity: 0
+    }, {
+      opacity: 1,
+      duration: 1,
+      stagger: {
+        repeat: -1,
+        yoyo: true
+      }
+    });
+  </script>
+</body>
+</html>

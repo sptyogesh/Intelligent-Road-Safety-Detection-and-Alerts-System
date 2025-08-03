@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        /* Global Styles */
+        :root {
+            --dark-slate: #2C3E50;
+            --light-gray: #ECF0F1;
+            --teal: #1ABC9C;
+            --muted-gray: #7F8C8D;
+            --blue: #3498DB;
+            --darker-blue: #2980B9;
+            --light-gray-bg: #EAEDED;
+            --red: #E74C3C;
+            --dark-red: #C0392B;
+        }
+        *{
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: var(--light-gray-bg);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: var(--dark-slate);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: var(--teal);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--dark-slate);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--teal);
+            color: white;
+        }
+
+        .back-link, .delete-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .delete-button {
+            background-color: var(--red);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .delete-button:hover {
+            background-color: var(--dark-red);
+        }
+        .view-map {
+            text-align: center; /* Center align the map link */
+            margin-top: 20px; /* Add some margin above the link */
+        }
+        
+        .map-link {
+            display: inline-block; /* Make the link block-level for padding */
+            background-color: var(--blue); /* Background color */
+            color: white; /* Text color */
+            padding: 10px 20px; /* Padding around the text */
+            border-radius: 5px; /* Rounded corners */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Make text bold */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+        }
+        
+        .map-link:hover {
+            background-color: var(--darker-blue); /* Darker background on hover */
+            transform: scale(1.05); /* Slightly scale up on hover */
+        }        
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-left">
+            <a href="{{ url_for('driver_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('driver_history') }}">History</a>
+        </div>
+        <div class="nav-right">
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Driver Details Content -->
+    <!-- Driver Details Content -->
+<div class="container">
+    <h1>Driver Details</h1>
+    <table>
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ user[0] }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ user[1] }}</td>
+            </tr>
+            <tr>
+                <th>District</th>
+                <td>{{ user[2] }}</td>
+            </tr>
+            <tr>
+                <th>Subdivision</th>
+                <td>{{ user[3] }}</td>
+            </tr>
+            <tr>
+                <th>Pincode</th>
+                <td>{{ user[4] }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ user[8] }}</td>
+            </tr>
+            <tr>
+                <th>Time</th>
+                <td id="time">{{ user[9].strftime('%I:%M %p').lstrip("0") }}</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td >
+                    <div class="view-map">
+                        <a href="{{ url_for('map_view', lat=user[5], lng=user[6]) }}" class="map-link">View Location on Map</a>
+                    </div>                    
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="delete-form">
+        <form action="{{ url_for('delete_driver', user_id=user[0]) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this record?');">
+            <button type="submit" class="delete-button">Delete Data</button>
+        </form>
+    </div>
+</div>
+
+
+    <!-- Script to format time -->
+    <script>
+        document.querySelectorAll('#time').forEach(function(element) {
+            var uploadTime = element.textContent;
+            var timeParts = uploadTime.split(':');
+            if (timeParts.length >= 3) {
+                var formattedTime = timeParts[0] + ':' + timeParts[1] + ':' + timeParts[2].split('.')[0];
+                element.textContent = formattedTime;
+            }
+        });
+    </script>
+</body>
+</html> 

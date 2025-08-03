@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 768px) {
+    .navbar-toggler {
+        width: 55px; /* Reduce width */
+        height: 40px; /* Adjust height if needed */
+    }
+    .search-container input {
+        width: 280px; /* Fixed width for the search bar */
+        transition: none; /* Disable transition effect on focus */
+    }
+    .search-container input:focus {
+        width: 280px; /* Expanded width when focused */
+    }
+    .navbar-expanded .search-container input {
+        width:340px;  /* Expanded search bar width */
+    }
+}
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            scroll-behavior: smooth;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .navbar-light .nav-link {
+            color: #000;
+        }
+
+        .btn-outline-primary {
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        .upload-time,
+        .date-column {
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        th,
+        td {
+            min-width: 100px;
+            font-size: 0.9rem;
+        }
+
+        .text-center {
+            color: black;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        /* Responsive Table */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: scroll;
+            }
+
+            .table th,
+            .table td {
+                white-space: nowrap;
+            }
+        }
+
+        /* Disabled Button Styling */
+        .disabled-button {
+            background-color: #ccc !important;
+            border-color: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed;
+        }
+
+        .disabled-button:hover {
+            background-color: #ccc !important;
+            border-color: #ccc !important;
+        }
+
+        /* Adjust search box and buttons */
+        .search-container {
+            max-width: 200px;
+        }
+
+        .dropdown-menu .dropdown-item {
+            color: black;
+            cursor: pointer;
+        }
+        /* General input field styling */
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-group-text {
+    border-radius: 0 0.25rem 0.25rem 0;
+    cursor: pointer;
+}
+
+.input-group-text:hover {
+    background-color: #f1f1f1;
+}
+
+.container {
+    background-color: rgba(238, 232, 232, 0.26);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin-top: 50px;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(to right, #007bff, #0056b3);
+    border: none;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Alert message fade-in */
+.alert {
+    border-radius: 10px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 576px) {
+    .container {
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .form-control {
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        font-size: 0.875rem;
+        padding: 10px 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <a class="navbar-brand" href="javascript:history.back()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-inbox"></i> Inbox
+                </a>
+                <a class="navbar-brand" href="{{ url_for('chart') }}">
+                    <i class="fas fa-chart-line"></i> Chart
+                </a>
+                {% if session.get('is_admin') %}
+                <div class="dropdown">
+                    <a class="btn btn-light dropdown-toggle navbar-brand" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Admin Menu">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('approve_users') }}">
+                            <i class="fas fa-user-check"></i> Approve Users
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('add_admin') }}">
+                            <i class="fas fa-user-plus"></i> Add Admin
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('manage_admins') }}">
+                            <i class="fas fa-users-cog"></i> Manage Admins
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                <a class="navbar-brand" href="{{ url_for('reopen_cases') }}" style="min-width: 120px;">
+                    <i class="fas fa-history"></i> Case History
+                </a>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+        <h1>Edit Admin</h1>
+        <form action="{{ url_for('edit_admin', admin_id=admin['id']) }}" method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ admin['name'] }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ admin['email'] }}" required readonly style="cursor:default">
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone" name="phone" value="{{ admin['phone'] }}" required readonly style="cursor:default">
+            </div>
+            <div class="mb-3">
+                <label for="employee" class="form-label">Employee</label>
+                <input type="text" class="form-control" id="employee" name="employee" value="{{ admin['employee'] }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="aadhar" class="form-label">Aadhar</label>
+                <input type="text" class="form-control" id="aadhar" name="aadhar" value="{{ admin['aadhar'] }}" required readonly style="cursor:default">
+            </div>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" class="form-control" required>
+                <option value="{{ admin['gender'] }}" selected>{{ admin['gender'] }}</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select><br>
+
+            <div class="mb-3">
+                <label for="state">State</label>
+                <select id="state" name="state" class="form-control">
+                    <option value="{{ admin['state'] }}" disabled selected>{{ admin['state'] }}</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="district">District</label>
+                <select id="district" name="district" class="form-control">
+                    <option value="{{ admin['district'] }}" disabled selected>{{ admin['district'] }}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date-of-Bitth</label>
+                <input type="date" class="form-control" id="dob" name="dob" value="{{ admin['dob'] }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="password" name="password" value="{{ admin['password'] }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+        <a href="{{ url_for('manage_admins') }}" class="btn btn-secondary mt-3">Back to Manage Admins</a>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const stateSelect = document.getElementById("state");
+            const districtSelect = document.getElementById("district");
+            const subDivisionSelect = document.getElementById("subdivision");
+            const pincodeSelect = document.getElementById("pincode");
+        
+            // Fetch JSON data
+            fetch('{{ url_for('static', filename='state.json') }}')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const hierarchicalData = data.reduce((acc, item) => {
+                        const STATE = item.state.toUpperCase();
+                        acc[STATE] = {};
+                        item.districts.forEach(district => {
+                            const DISTRICT = district.district.toUpperCase();
+                            acc[STATE][DISTRICT] = {};
+                            district.subdivisions.forEach(subdivision => {
+                                const SUBDIVISION = subdivision.subdivision.toUpperCase();
+                                acc[STATE][DISTRICT][SUBDIVISION] = subdivision.pincode.toUpperCase();
+                            });
+                        });
+                        return acc;
+                    }, {});
+        
+                    // Populate state options in alphabetical order
+                    const states = Object.keys(hierarchicalData).sort();
+                    states.forEach(state => {
+                        const option = document.createElement("option");
+                        option.value = state;
+                        option.textContent = state;
+                        stateSelect.appendChild(option);
+                    });
+        
+                    stateSelect.addEventListener("change", function() {
+                        const state = this.value;
+                        const districts = Object.keys(hierarchicalData[state] || {}).sort();
+                        populateSelect(districtSelect, districts, "{{ admin['district'] }}");
+                        districtSelect.disabled = !state;
+                        subDivisionSelect.disabled = true;
+                        pincodeSelect.disabled = true;
+                    });
+        
+                    districtSelect.addEventListener("change", function() {
+                        const state = stateSelect.value;
+                        const district = this.value;
+                        const subDivisions = Object.keys(hierarchicalData[state][district] || {}).sort();
+                        populateSelect(subDivisionSelect, subDivisions, "");
+                        subDivisionSelect.disabled = !district;
+                        pincodeSelect.disabled = true;
+                    });
+        
+                    subDivisionSelect.addEventListener("change", function() {
+                        const state = stateSelect.value;
+                        const district = districtSelect.value;
+                        const subDivision = this.value;
+                        const pincode = hierarchicalData[state][district][subDivision] || "";
+                        populateSelect(pincodeSelect, [pincode], "");
+                        pincodeSelect.disabled = !subDivision;
+                    });
+        
+                    function populateSelect(selectElement, data, placeholder) {
+                        selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+                        data.forEach(item => {
+                            const option = document.createElement("option");
+                            option.value = item;
+                            option.textContent = item;
+                            selectElement.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading the JSON data:', error);
+                });
+        });
+        
+    </script>    
+</body>
+</html>

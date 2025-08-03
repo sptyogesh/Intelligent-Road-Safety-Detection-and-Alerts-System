@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Road Safety Detection and Alerts System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        *{
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Road Safety System</h1>
+        </div>
+        <nav role="navigation">
+            <button class="menu-toggle" aria-label="Toggle Navigation" aria-expanded="false">
+                <span class="bar bar-top"></span>
+                <span class="bar bar-middle"></span>
+                <span class="bar bar-bottom"></span>
+            </button>            
+            <ul id="nav-list">
+                <li><a href="/form">Register Complaint</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/helpus">Help Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+<br>
+<main>
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Welcome to the Intelligent Road Safety Detection and Alerts System!</h2>
+            <p>
+                An AI-powered platform for detecting road hazards and alerting authorities and drivers in real-time. 
+                Your safety on the road matters. Our system is designed to make your city safer by detecting road hazards 
+                in real-time and ensuring immediate action.
+            </p>
+            <p>
+                <strong>Stay Informed:</strong> Track road conditions and get alerts about hazards in your area.<br>
+                <strong>Report Issues:</strong> Be part of the solution by reporting any road hazards you encounter.<br>
+                <strong>Safer Roads for All:</strong> Together, we can create a safer, more reliable road network.
+            </p>
+            <p>Thank you for helping us build safer, smarter cities!</p>
+        </div>
+    </section>
+
+    <section id="features">
+        <h3><center>Overview of Features</center></h3>
+        <ul class="features">
+            <li>🚦 <strong>Real-Time Hazard Detection</strong></li>
+            <li>📱 <strong>Driver Alerts</strong></li>
+            <li>👮 <strong>Field Officer Updates</strong></li>
+        </ul>
+    </section>
+</main>
+
+<script src="{{ url_for('static', filename='main.js') }}" defer></script>
+
+</body>
+</html>

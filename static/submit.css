@@ -1,0 +1,334 @@
+/* Global Reset */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to bottom right, #e3f2fd, #bbdefb);
+  color: #333;
+  overflow: hidden;
+}
+
+/* Flex Container */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Card Styling */
+.card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 50%;
+  max-width: 600px; /* Maximum width */
+}
+
+.title {
+  font-size: 28px;
+  margin: 10px 0;
+  color: #1e88e5;
+  animation: fadeIn 1s ease;
+}
+
+.message {
+  font-size: 16px;
+  margin: 10px 0;
+  color: #555;
+  animation: fadeIn 1.2s ease;
+}
+
+.status-message {
+  font-size: 14px;
+  color: #ff9800;
+  margin: 5px 0;
+  animation: fadeIn 1.4s ease;
+}
+
+/* Button Styling */
+.button {
+  background: #1e88e5;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.button:hover {
+  background: #1976d2;
+  transform: translateY(-2px);
+}
+
+/* Rocket Styling */
+.rocket {
+  position: absolute;
+  bottom: 20%;
+  left: 40%;
+  width: 50px;
+  animation: rocketFly 5s linear infinite;
+}
+
+/* Keyframes for Animations */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@keyframes cloudMove {
+  0% { transform: translateX(-200px); }
+  100% { transform: translateX(100vw); }
+}
+
+@keyframes rocketFly {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-150px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes clouds {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes message {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Wrapper */
+.wrapper {
+display: flex;
+width: 100%;
+height: 100%;
+justify-content: center;
+align-items: center;
+}
+
+/* Screen Content */
+.screen {
+display: flex;
+flex-flow: column nowrap;
+align-items: center;
+justify-content: center;
+border-radius: 32px;
+}
+
+/* Clouds Animation */
+.clouds { 
+top: 30%;
+left: 40%;
+width: 243px;
+height: 172px;
+opacity: 0;
+animation: clouds 1s .8s ease-in forwards;
+}
+
+/* Plane Animation */
+.plane {
+position: absolute;
+top: 30%;
+left: 40%;
+width: 139px;
+height: 139px;
+opacity: 0;
+animation: plane-start .8s .8s ease-out, plane-loop 1.6s 1.6s linear infinite;
+}
+
+/* Message Animation */
+.message1 {
+margin-top: 25px;
+font-family: Rubik, sans-serif;
+font-size: 16px;
+color: #292929;
+letter-spacing: 1px;
+animation: message .3s 1.6s ease-in-out backwards;
+}
+
+.message2 {
+margin-top: 8px;
+font-family: Rubik, sans-serif;
+font-size: 16px;
+color: #292929;
+letter-spacing: 1px;
+animation: message .5s 1.8s ease-in-out backwards;
+}
+
+/* Button Style */
+.button {
+padding: 16px 80px;
+background: #e3f2fd;
+box-shadow: 0 4px 8px 0 #3a93db;
+border-radius: 24px;
+font-family: Rubik, sans-serif;
+font-size: 16px;
+color: orange;
+letter-spacing: -0.05px;
+text-align: center;
+}
+
+/* Plane Keyframe Animations */
+@keyframes plane-start { 
+0% { transform: translate(-80px, 130px); }
+50% { opacity: 1; }
+100% { transform: translate(0px, 0); opacity: 1; }
+}
+
+@keyframes plane-loop {
+0% { transform: translate(0px, 0); opacity: 1; }
+50% { transform: translate(-20px, 30px); opacity: 1; }
+100% { transform: translate(0px, 0); opacity: 1; }
+}
+
+/* Media Queries for Responsiveness */
+
+/* For tablets */
+@media (max-width: 1024px) {
+.card {
+  width: 70%; /* Decrease the card width */
+}
+
+.title {
+  font-size: 24px;
+}
+
+.message {
+  font-size: 14px;
+}
+
+.button {
+  padding: 14px 60px;
+  font-size: 14px;
+}
+
+.clouds {
+  top: 20%;
+  left: 50%;
+  width: 200px;
+}
+
+.plane {
+  top: 25%;
+  left: 50%;
+  width: 120px;
+}
+}
+
+/* For small tablets and large phones */
+@media (max-width: 768px) {
+.card {
+  width: 80%;
+}
+
+.title {
+  font-size: 22px;
+}
+
+.message {
+  font-size: 14px;
+}
+
+.button {
+  padding: 12px 50px;
+  font-size: 14px;
+}
+
+.clouds {
+  top: 15%;
+  left: 40%;
+  width: 200px;
+}
+
+.plane {
+  top: 20%;
+  left: 50%;
+  width: 100px;
+}
+}
+
+/* For small mobile devices */
+@media (max-width: 480px) {
+body {
+  padding: 10px;
+}
+
+.container {
+  height: auto;
+  padding: 10px;
+}
+
+.card {
+  width: 90%;
+  padding: 20px;
+}
+
+.title {
+  font-size: 20px;
+}
+
+.message {
+  font-size: 12px;
+}
+
+.button {
+  padding: 10px 40px;
+  font-size: 12px;
+}
+
+.clouds {
+  top: 10%;
+  left: 10%;
+  width: 150px;
+}
+
+.plane {
+  top: 20%;
+  left: 40%;
+  width: 80px;
+}
+}
+
+/* For small mobile screens */
+@media (max-width: 320px) {
+.title {
+  font-size: 18px;
+}
+
+.message {
+  font-size: 12px;
+}
+
+.button {
+  padding: 10px 30px;
+  font-size: 12px;
+}
+
+.clouds {
+  top: 5%;
+  left: 5%;
+  width: 120px;
+}
+
+.plane {
+  top: 15%;
+  left: 35%;
+  width: 70px;
+}
+}

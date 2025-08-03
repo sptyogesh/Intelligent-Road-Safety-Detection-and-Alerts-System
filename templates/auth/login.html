@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login page for MyApp">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Navigation Bar Styling */
+        nav {
+            background-color: #1A73E8;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        nav .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .nav-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            font-family: 'Merriweather', serif;
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        nav .nav-links a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* Body Styles */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFCCBC; /* Peach background color */
+            color: #424242; /* Dark Gray for text */
+            font-size: 16px;
+            flex-direction: column;
+        }
+
+        /* Form Container */
+        .form-container {
+            width: 100%;
+            max-width: 450px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 80px; /* Adjust for navbar */
+        }
+
+        /* Heading */
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #212121;
+            font-family: 'Merriweather', serif;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Card-based selection for login types */
+        .card-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            width: 32%;
+            padding: 20px;
+            background-color: #f4f6f9;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #212121;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        /* Forms for Login */
+        .fieldset {
+            display: none;
+        }
+
+        .fieldset.active {
+            display: block;
+        }
+
+        .fieldset legend {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 15px;
+            font-family: 'Merriweather', serif;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-top: 20px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: #555555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #FF7043;
+            background-color: #FFEBEE;
+        }
+
+        .input-group input[type="submit"] {
+            background-color: #FF7043;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input[type="submit"]:hover {
+            background-color: #D32F2F;
+            transform: translateY(-2px);
+        }
+
+        .forgot {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #FF7043;
+            text-align: center;
+        }
+
+        .forgot a {
+            text-decoration: none;
+            color: #FF7043;
+            font-weight: 600;
+        }
+
+        .forgot a:hover {
+            text-decoration: underline;
+        }
+
+        /* Password Input with Show/Hide Toggle */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        #eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }
+
+        /* Hamburger Icon (Visible on mobile) */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 24px;
+            width: 30px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 30px;
+            height: 4px;
+            background-color: white;
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Media Queries for Mobile */
+        @media (max-width: 768px) {
+            nav .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 15px;
+                background-color: #FF7043;
+                width: 200px;
+                border-radius: 5px;
+                padding: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            nav .nav-links a {
+                font-size: 18px;
+                padding: 10px;
+                color: white;
+            }
+
+            nav .hamburger {
+                display: flex;
+            }
+
+            nav .nav-links.active {
+                display: flex;
+            }
+
+            .form-container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            .card-container {
+                flex-direction: column;
+            }
+
+            .card {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+        /* Adjust the form container to be below the fixed nav */
+        .form-container {
+            width: 100%;
+            max-width: 650px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 120px; /* Adjust the value depending on the height of your navbar */
+        }
+
+        /* Sticky navigation */
+        nav {
+            background-color: #FF7043; /* Warm Orange for navigation bar */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .password-container input {
+            flex: 1;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        
+        .password-container span {
+            margin-left: -25px; /* Adjusts icon position within input */
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }        
+        /* Flash Message Styles */
+        .flash-message {
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            max-width: 450px;
+            margin: 10px auto;
+            position: relative;
+        }
+
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+
+        .alert-error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+
+        .alert-info {
+            background-color: #d9edf7;
+            color: #31708f;
+            border: 1px solid #bce8f1;
+        }
+
+        .flash-close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .flash-close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <div class="nav-logo">Road Saftey System</div>
+            <div class="nav-links" id="nav-links">
+                <a href="/">Home</a>
+                <a href="/form">Compliant</a>
+                <a href="/about">About Us</a>
+                <a href="">Help Us</a>
+            </div>
+            <div class="hamburger" id="hamburger-icon" onclick="toggleNav()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+        <h2>Select Login Type</h2>
+
+        <!-- Card-based selection for login types -->
+        <div class="card-container">
+            <div class="card" onclick="toggleForms('user')">
+                <div class="icon">👤</div>
+                <h3>User</h3>
+                <p>Select if you're a regular user</p>
+            </div>
+            <div class="card" onclick="toggleForms('admin')">
+                <div class="icon">🛠️</div>
+                <h3>Admin</h3>
+                <p>Select if you're an administrator</p>
+            </div>
+            <div class="card" onclick="toggleForms('driver')">
+                <div class="icon">🚗</div>
+                <h3>Driver</h3>
+                <p>Select if you're a driver</p>
+            </div>
+        </div>
+
+        <!-- User Login Form -->
+        <fieldset id="user-login" class="fieldset">
+            <legend>User Login</legend>
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="input-group">
+                    <label for="user-email">Email:</label>
+                    <input type="email" id="user-email" name="email" required autofocus aria-label="Email Address">
+                </div>
+                <div class="input-group">
+                    <label for="user-password">Password:</label>
+                    <div class="password-container">
+                        <input type="password" id="user-password" name="password" required autocomplete="off" aria-label="Password" aria-describedby="passwordHelp">
+                        <span id="user-eye-icon" onclick="togglePasswordVisibility('user-password', 'user-eye-icon')">👁️</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+            <p class="forgot">
+                Don't have an account? <a href="{{ url_for('register') }}">Register</a><br>
+                <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+            </p>
+        </fieldset>
+
+        <!-- Admin Login Form -->
+        <fieldset id="admin-login" class="fieldset">
+            <legend>Admin Login</legend>
+            <form method="POST" action="{{ url_for('admin_login') }}">
+                <div class="input-group">
+                    <label for="admin-email">Email:</label>
+                    <input type="email" id="admin-email" name="email" required autofocus aria-label="Admin Email">
+                </div>
+                <div class="input-group">
+                    <label for="admin-password">Password:</label>
+                    <div class="password-container">
+                        <input type="password" id="admin-password" name="password" required autocomplete="off" aria-label="Admin Password">
+                        <span id="admin-eye-icon" onclick="togglePasswordVisibility('admin-password', 'admin-eye-icon')">👁️</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+            <p class="forgot">
+                If you're a user, <a href="#" onclick="toggleForms('user')">Login here</a>.
+            </p>
+        </fieldset>
+
+        <!-- Driver Login Form -->
+        <fieldset id="driver-login" class="fieldset">
+            <legend>Driver Login</legend>
+            <form method="POST" action="{{ url_for('driver_login') }}">
+                <div class="input-group">
+                    <label for="driver-email">Email:</label>
+                    <input type="email" id="driver-email" name="email" required autofocus aria-label="Driver Email">
+                </div>
+                <div class="input-group">
+                    <label for="driver-password">Password:</label>
+                    <div class="password-container">
+                        <input type="password" id="driver-password" name="password" required autocomplete="off" aria-label="Driver Password">
+                        <span id="driver-eye-icon" onclick="togglePasswordVisibility('driver-password', 'driver-eye-icon')">👁️</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+            <p class="forgot">
+                Don't have an account? <a href="{{ url_for('register') }}">Register</a><br>
+                <a href="{{ url_for('driver_forgot_password') }}">Forgot Password?</a>
+            </p>
+        </fieldset>
+    </div>
+
+    <script>
+        // Toggle Navigation Menu on Mobile
+        function toggleNav() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        function toggleForms(form) {
+            // Hide all forms
+            const userForm = document.getElementById('user-login');
+            const adminForm = document.getElementById('admin-login');
+            const driverForm = document.getElementById('driver-login');
+
+            userForm.classList.remove('active');
+            adminForm.classList.remove('active');
+            driverForm.classList.remove('active');
+
+            // Show selected form
+            if (form === 'user') {
+                userForm.classList.add('active');
+            } else if (form === 'admin') {
+                adminForm.classList.add('active');
+            } else {
+                driverForm.classList.add('active');
+            }
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+        
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = '🙈'; // Change to "eye-off" icon
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = '👁️'; // Change back to "eye" icon
+            }
+        }      
+          
+
+        // Function to convert email input to lowercase
+        document.getElementById("user-email").addEventListener("input", function() {
+            this.value = this.value.toLowerCase();
+        });
+        document.getElementById("admin-email").addEventListener("input", function() {
+            this.value = this.value.toLowerCase();
+        });
+        document.getElementById("driver-email").addEventListener("input", function() {
+            this.value = this.value.toLowerCase();
+        });
+        
+    </script>
+</body>
+</html>

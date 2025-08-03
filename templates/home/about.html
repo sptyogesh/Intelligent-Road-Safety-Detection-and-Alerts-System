@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Intelligent Road Safety Detection and Alerts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Georgia:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Color Palette */
+        :root {
+            --primary-color: #0056b3; /* Dark blue */
+            --secondary-color: #3498db; /* Blue */
+            --hover-color: #2980b9; /* Darker blue */
+            --background-color: #f4f4f4; /* Light gray */
+            --text-color: #333; /* Dark text */
+            --highlight-color: #ffcc00; /* Yellow */
+        }
+        *{
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none;
+        }
+
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #e9ecef 0%, #ffffff 100%);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #ffffff;
+            border: 1px solid #dcdcdc;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 30px;
+            font-size: 1.8em;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+        }
+
+        p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .core-values {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .value {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            flex: 1 1 200px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .value:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        nav {
+            margin-left: auto;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin: 0 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--highlight-color);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .core-values {
+                flex-direction: column; /* Stack values on small screens */
+                align-items: center;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Road Safety System</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/helpus">Help Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>About Us</h1>
+        <h2>Welcome to Intelligent Road Safety Detection and Alerts</h2>
+        <p>In an era where urbanization is rapidly transforming our cities, ensuring road safety and effective infrastructure management is paramount. At Intelligent Road Safety Detection and Alerts, we harness the latest advancements in machine learning (ML) and deep learning (DL) to pioneer solutions that address the pressing challenges of urban hazards.</p>
+
+        <h2>Our Purpose</h2>
+        <p>We are committed to enhancing urban safety by automating the detection and classification of potential hazards, such as potholes, cracks, and fallen trees. Our innovative system integrates real-time CCTV footage with sophisticated algorithms to provide municipalities with timely alerts, enabling proactive responses that minimize risks and enhance the quality of life for residents.</p>
+
+        <h2>Our Vision</h2>
+        <p>We envision cities where technology seamlessly integrates with urban management, creating safer environments for all. By shifting from reactive maintenance to a proactive approach, we aim to foster resilience and sustainability in urban infrastructure.</p>
+
+        <h2>Core Values</h2>
+        <div class="core-values">
+            <div class="value">
+                <strong>Excellence</strong>
+                <p>We strive for the highest standards in our technology and services.</p>
+            </div>
+            <div class="value">
+                <strong>Collaboration</strong>
+                <p>Partnering with communities to tailor solutions for real needs.</p>
+            </div>
+            <div class="value">
+                <strong>Innovation</strong>
+                <p>We are committed to continuous improvement and cutting-edge technologies.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

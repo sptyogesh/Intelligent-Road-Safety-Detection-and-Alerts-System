@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Users</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background: #f4f6f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 20px 0;
+            font-size: 2em;
+            color: #2c3e50;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        table {
+            
+            width: 100%;
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ecf0f1;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            width: 150px;
+            text-align: center;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button.approve {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button.approve:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        button.reject {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        button.reject:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        button.cancel {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        button.cancel:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .flashes {
+            margin-bottom: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #f5c6cb;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 70%;
+            max-width: 500px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        .modal-footer {
+            text-align: right;
+        }
+
+        .modal button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            font-size: 1em;
+            margin-left: 10px;
+        }
+
+        .modal button.cancel {
+            background-color: #bdc3c7;
+        }
+
+        @media screen and (max-width: 768px) {
+            button {
+                width: 130px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            button {
+                width: 120px;
+            }
+        }
+@media (max-width: 768px) {
+    .navbar-toggler {
+        width: 55px; /* Reduce width */
+        height: 40px; /* Adjust height if needed */
+    }
+    .search-container input {
+        width: 280px; /* Fixed width for the search bar */
+        transition: none; /* Disable transition effect on focus */
+    }
+    .search-container input:focus {
+        width: 280px; /* Expanded width when focused */
+    }
+    .navbar-expanded .search-container input {
+        width:340px;  /* Expanded search bar width */
+    }
+    
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <a class="navbar-brand" href="javascript:history.back()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-inbox"></i> Inbox
+                </a>
+                <a class="navbar-brand" href="{{ url_for('chart') }}">
+                    <i class="fas fa-chart-line"></i> Chart
+                </a>
+                {% if session.get('is_admin') %}
+                <div class="dropdown">
+                    <a class="btn btn-light dropdown-toggle navbar-brand" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Admin Menu">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('add_admin') }}">
+                            <i class="fas fa-user-plus"></i> Add Admin
+                        </a>
+                        <a class="dropdown-item navbar-brand" href="{{ url_for('manage_admins') }}">
+                            <i class="fas fa-users-cog"></i> Manage Admins
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                <a class="navbar-brand" href="{{ url_for('reopen_cases') }}" style="min-width: 120px;">
+                    <i class="fas fa-history"></i> Case History
+                </a>
+            </ul>
+        </div>
+        <div class="search-container ml-3">
+            <input type="text" id="caseSearch" class="form-control" placeholder="Search by Case ID or Name" aria-label="Search by Case ID or Name">
+        </div>
+    </nav>
+    <h1>Pending User Approvals</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="alert-{{ category }}" aria-live="polite">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <table id="reopenTable" class="table-responsive">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>State</th>
+                <th>District</th>
+                <th>Subdivision</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in pending_users %}
+            <tr>
+                <td>{{ user[0] }}</td>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[2] }}</td>
+                <td>{{ user[3] }}</td>
+                <td>{{ user[5] }}</td>
+                <td>{{ user[6] }}</td>
+                <td>{{ user[7] }}</td>
+                <td>
+                    <div class="button-container">
+                        
+                        <button type="button" class="approve" onclick="openModal('approve', {{ user[0] }}, '{{ user[1] }}')" aria-label="Approve user {{ user[1] }}">Approve</button>
+                        <button type="button" class="reject" onclick="openModal('reject', {{ user[0] }}, '{{ user[1] }}')" aria-label="Reject user {{ user[1] }}">Reject</button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal Structure -->
+    <div id="confirmationModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modalTitle">Confirm Action</span>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel" onclick="closeModal()">Cancel</button>
+                <form id="confirmationForm" method="POST" action="{{ url_for('approve_users') }}" style="display: inline;" onsubmit="return validateForm()">
+                    <input type="hidden" name="user_id" id="user_id">
+                    <input type="hidden" name="action" id="action">
+                    <button type="submit" id="confirmButton" aria-label="Confirm action">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        let actionType = ''; // Store action type (approve/reject)
+        let userId = ''; // Store the user ID
+        let userName = ''; // Store the user name
+    
+        // Open the modal and set up the correct action
+        function openModal(action, id, name) {
+            actionType = action;
+            userId = id;
+            userName = name;
+            
+            // Set up modal content based on action
+            const modal = document.getElementById('confirmationModal');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            const confirmButton = document.getElementById('confirmButton');
+            const userIdInput = document.getElementById('user_id');
+            const actionInput = document.getElementById('action');
+            
+            if (action === 'approve') {
+                title.textContent = `Confirm Approval - ${userId}: ${userName}`;
+                message.textContent = `Are you sure you want to approve user ${userName} (ID: ${userId})?`;
+            } else if (action === 'reject') {
+                title.textContent = `Confirm Rejection - ${userId}: ${userName}`;
+                message.textContent = `Are you sure you want to reject user ${userName} (ID: ${userId})?`;
+            }
+    
+            // Set the values for the hidden inputs
+            userIdInput.value = userId;
+            actionInput.value = actionType;
+    
+            modal.style.display = 'block'; // Show the modal
+        }
+    
+        // Close the modal
+        function closeModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'none'; // Hide the modal
+        }
+    
+        // Validate the form submission
+        function validateForm() {
+            const action = document.getElementById('action').value;
+            if (!action) {
+                alert('Please select an action before submitting.');
+                return false;
+            }
+            return true;
+        }
+    
+        // Disable buttons after click
+        function disableButtons(buttons) {
+            buttons.forEach(button => {
+                button.disabled = false;
+                button.style.cursor = 'allowed';
+            });
+        }
+    
+        // Add event listener to disable buttons when clicked
+        document.querySelectorAll('.approve, .reject').forEach(button => {
+            button.addEventListener('click', function() {
+                disableButtons([this]);
+            });
+        });
+    
+        // Search functionality (Case ID or Name)
+        document.getElementById('caseSearch').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#reopenTable tbody tr');
+            rows.forEach(function(row) {
+                const caseId = row.cells[0].textContent.toLowerCase();
+                const name = row.cells[1].textContent.toLowerCase();
+                row.style.display = (caseId.includes(query) || name.includes(query)) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

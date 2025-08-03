@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Road Safety System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        *{
+            user-select: none; /* Prevents text selection */
+            -webkit-user-select: none; /* For Safari */
+            -moz-user-select: none; /* For Firefox */
+            -ms-user-select: none;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            margin-left: auto;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+
+        nav li {
+            margin: 0 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        main {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact {
+            background: linear-gradient(135deg, #ffffff 0%, #e6f7ff 100%);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #0056b3;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        input, textarea {
+            width: 90%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            transition: border 0.3s;
+            font-size: 1em;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 5px rgba(0, 86, 179, 0.5);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        .notification {
+            margin-top: 15px;
+            color: #28a745;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                padding: 20px;
+            }
+            .contact {
+                padding: 20px;
+            }
+            button {
+                font-size: 1em;
+            }
+        }
+
+        h1 {
+            margin: 0; 
+            font-size: 2em; 
+            margin-left: 10%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>Road Safety System</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="contact" class="contact">
+            <h2>Help Us</h2>
+            <p>Your feedback is essential for us to enhance your experience.<br> Please let us know your thoughts!</p>
+            <form id="contactForm" onsubmit="sendEmail(event)">
+                <div style="position: relative;">
+                    <i class="fa fa-user" style="position: absolute; left: 10px; top: 12px; color: #007bff;"></i>
+                    <input type="text" name="name" placeholder="Your Name" required aria-label="Your Name" style="padding-left: 40px;">
+                </div>
+                <div style="position: relative;">
+                    <i class="fa fa-envelope" style="position: absolute; left: 10px; top: 12px; color: #007bff;"></i>
+                    <input type="email" name="email" placeholder="Your Email" required aria-label="Your Email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Enter a valid email address" style="padding-left: 40px;">
+                </div>
+                <div style="position: relative;">
+                    <i class="fa fa-comment" style="position: absolute; left: 10px; top: 12px; color: #007bff;"></i>
+                    <textarea name="message" rows="4" placeholder="Your Message" required aria-label="Your Message" style="padding-left: 40px;"></textarea>
+                </div>
+                <button type="submit" id="submitBtn">Send Message</button>
+                <div class="notification" id="notification" aria-live="polite">Thank you for your feedback! We will address your report promptly.</div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        function sendEmail(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const form = event.target;
+            const submitBtn = document.getElementById('submitBtn');
+            const notification = document.getElementById('notification');
+
+            // Disable the button and show loading state
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            // Simulate form submission (replace with actual email sending logic)
+            setTimeout(() => {
+                // Show notification
+                notification.style.display = 'block';
+                form.reset();
+                submitBtn.textContent = 'Send Message';
+                submitBtn.disabled = false; // Re-enable the button
+
+                // Hide notification after 5 seconds
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000); // 5 seconds delay
+            }, 2000); // Simulated delay
+        }
+    </script>
+
+</body>
+</html>

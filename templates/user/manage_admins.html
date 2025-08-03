@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Admins</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
+</head>
+    <style>/* General Body Styling */
+        body {
+            background-color: #f4f7fb; /* Lighter background color */
+            font-family: 'Roboto', sans-serif;
+            color: #4a4a4a; /* Darker text for better readability */
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Flash Message Styling */
+        .flash-message {
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            max-width: 450px;
+            margin: 10px auto;
+            position: relative;
+        }
+        
+        .flash-message .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .flash-message .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .flash-message .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .flash-close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .flash-close:hover {
+            color: #000;
+        }
+        
+        /* Table Styling */
+        .table th, .table td {
+            vertical-align: middle;
+            padding: 12px;
+            font-size: 1rem;
+        }
+        
+        .table-responsive {
+            margin-top: 20px;
+        }
+        
+        .table-bordered {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .table thead {
+            background-color: #004085;
+            color: #ffffff;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+        
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #f1f1f1;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        
+        .table tbody tr:focus-within {
+            background-color: #e1f7d5;
+        }
+        
+        /* Card Styling */
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, #004085, #0069d9);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 2px solid #0056b3;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        /* Search Bar Styling */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-bar input {
+            border-radius: 8px;
+            padding: 8px 15px;
+            width: 300px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-bar input:focus {
+            border-color: #0069d9;
+        }
+        
+        .search-bar button {
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+        }
+        
+        .search-bar .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        
+        .search-bar .btn-danger:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+        
+        .search-bar .btn-warning {
+            background-color: #ffc107;
+            border: none;
+        }
+        
+        .search-bar .btn-warning:hover {
+            background-color: #e0a800;
+            transform: scale(1.05);
+        }
+        
+        .search-bar .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+        
+        .search-bar .btn-success:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+        
+        /* Modal Styling */
+        .modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out;
+            transform: translateY(-30px);
+        }
+        
+        .modal.show .modal-dialog {
+            transform: translateY(0);
+        }
+        
+        .modal-footer button {
+            transition: transform 0.2s ease;
+        }
+        
+        .modal-footer button:hover {
+            transform: scale(1.05);
+        }
+        
+        .modal-footer .btn-danger {
+            background-color: #ff6b6b;
+        }
+        
+        .modal-footer .btn-secondary {
+            background-color: #ccc;
+        }
+        
+        /* Tooltip Styling */
+        .tooltip-inner {
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+        }
+        
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 768px) {
+            .navbar-toggler {
+                width: 50px;
+                height: 40px;
+            }
+        
+            .search-container input {
+                width: 260px;
+                transition: none;
+            }
+        
+            .search-container input:focus {
+                width: 280px;
+            }
+        
+            .navbar-expanded .search-container input {
+                width: 300px;
+            }
+        }
+        
+        /* Custom Confirmation Modal */
+        #confirmationModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        #confirmationModal.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .warning-icon {
+            font-size: 40px;
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+        
+    </style>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <a class="navbar-brand" href="javascript:history.back()">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                <i class="fas fa-inbox"></i> Inbox
+            </a>
+            <a class="navbar-brand" href="{{ url_for('chart') }}">
+                <i class="fas fa-chart-line"></i> Chart
+            </a>
+            {% if session.get('is_admin') %}
+            <div class="dropdown">
+                <a class="btn btn-light dropdown-toggle navbar-brand" id="adminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Admin Menu">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                    <a class="dropdown-item navbar-brand" href="{{ url_for('approve_users') }}">
+                        <i class="fas fa-user-check"></i> Approve Users
+                    </a>
+                    <a class="dropdown-item navbar-brand" href="{{ url_for('add_admin') }}">
+                        <i class="fas fa-user-plus"></i> Add Admin
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            <a class="navbar-brand" href="{{ url_for('reopen_cases') }}" style="min-width: 120px;">
+                <i class="fas fa-history"></i> Case History
+            </a>
+        </ul>
+    </div>
+    <div class="search-bar search-container ml-3">
+        <input type="text" class="form-control" id="search-input" placeholder="Search admins..." aria-label="Search Admin">
+    </div>
+</nav>
+
+
+    <!-- Flash Messages -->
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Emolpyee Id</th>
+                        <th>Aadhar</th>
+                        <th>Gender</th>
+                        <th>State</th>
+                        <th>District</th>
+                        <th>Dob</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin in admins %}
+                        <tr>
+                            <td>{{ admin.name }}</td>
+                            <td>{{ admin.email }}</td>
+                            <td>{{ admin.phone }}</td>
+                            <td>{{ admin.employee }}</td>
+                            <td>{{ admin.aadhar }}</td>
+                            <td>{{ admin.gender }}</td>
+                            <td>{{ admin.state }}</td>
+                            <td>{{ admin.district }}</td>
+                            <td>{{ admin.dob }}</td>
+                            <td>
+                                <!-- Trigger for Modal -->
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmDeleteModal" data-id="{{ admin.id }}" data-name="{{ admin.name }}">
+                                    Remove
+                                </button>
+                                <a href="{{ url_for('edit_admin', admin_id=admin.id) }}" class="btn btn-warning btn-sm ml-2">Edit</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    
+            <!-- Button to add a new admin -->
+            <a href="{{ url_for('add_admin') }}" class="btn btn-success">Add New Admin</a>
+        </div>
+    
+        <!-- Modal for Confirming Deletion -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the admin <strong id="adminName"></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <form action="{{ url_for('remove_admin') }}" method="POST" id="deleteAdminForm">
+                            <input type="hidden" name="admin_id" id="adminId">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <script>
+        
+         // Use jQuery to populate modal with the admin's ID and name
+         $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var adminId = button.data('id'); // Extract info from data-* attributes
+            var adminName = button.data('name');
+            
+            var modal = $(this);
+            modal.find('#adminId').val(adminId); // Set admin id in the form
+            modal.find('#adminName').text(adminName); // Set admin name in the modal body
+        });
+
+        $(document).ready(function() {
+            $('.navbar-toggler').click(function() {
+                $('body').toggleClass('navbar-expanded');  // Add or remove 'navbar-expanded' class to body
+            });
+        });
+
+        let searchInput = document.getElementById("search-input");
+        let debounceTimer;
+        
+        searchInput.addEventListener("input", function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                let filter = searchInput.value.toLowerCase();
+                let rows = document.querySelectorAll("tbody tr");
+                rows.forEach(function (row) {
+                    let cells = row.querySelectorAll("td");
+                    let match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                    row.style.display = match ? "" : "none";
+                });
+            }, 300); // 300ms debounce delay
+        });
+
+        // Clear Search functionality
+        document.getElementById("clear-search-btn").addEventListener("click", function() {
+            searchInput.value = '';
+            let rows = document.querySelectorAll("tbody tr");
+            rows.forEach(function(row) {
+                row.style.display = "";
+            });
+        });
+    
+    </script>
+</body>
+
+</html>

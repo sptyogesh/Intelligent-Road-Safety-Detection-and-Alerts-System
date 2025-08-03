@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Locations Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaaBb7KEn9zXF7kKAoeaFSbAqxkA_FBnk&libraries=geometry"></script>
+    
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            color: #2C3E50;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #2C3E50;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        nav .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .nav-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ECF0F1;
+            font-family: 'Merriweather', serif;
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav .nav-links a {
+            text-decoration: none;
+            color: #ECF0F1;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav .nav-links a:hover {
+            color: #1abc9c;
+            transform: translateY(-2px);
+        }
+
+        nav .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 24px;
+            width: 30px;
+            cursor: pointer;
+        }
+
+        nav .hamburger span {
+            width: 30px;
+            height: 4px;
+            background-color: #ECF0F1;
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            nav .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 15px;
+                background-color: #2C3E50;
+                width: 200px;
+                border-radius: 5px;
+                padding: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            nav .nav-links a {
+                font-size: 18px;
+                padding: 10px;
+                color: #ECF0F1;
+            }
+
+            nav .hamburger {
+                display: flex;
+            }
+
+            nav .nav-links.active {
+                display: flex;
+            }
+        }
+
+        /* Map Container */
+        #map {
+            width: 100%;
+            height: 70vh;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            text-align: center;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .spinner {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #2980b9;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body {
+            display: flex;
+            justify-content: center;  /* Center horizontally */
+            align-items: center;      /* Center vertically */
+            height: 100vh;            /* Full viewport height */
+            margin: 0;                /* Remove default margin */
+            background-color: #f7f7f7; /* Light background */
+        }
+
+        #map {
+            width: 100%;                /* Take full width */
+            max-width: 1200px;          /* Max width for the map */
+            height: 70vh;               /* Set height of the map */
+            border-radius: 10px;        /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="nav-logo">Road Saftey System</div>
+            <div class="nav-links" id="nav-links">
+                <a href="/">Home</a>
+                <a href="/form">Compliant</a>
+                <a href="/about">About Us</a>
+                <a href="/helpus">Help Us</a>
+            </div>
+            <div class="hamburger" id="hamburger-icon" onclick="toggleNav()" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>Loading map and case data...</p>
+    </div>
+
+    <!-- Map container -->
+    <div id="map"></div>
+
+    <script>
+        let userLocationMarker = null;
+        let userLocationCircle = null;
+        let map = null;
+
+        // Function to get the user's live location
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(
+                    (position) => {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+                        if (!map) {
+                            initializeMap(userLat, userLng);
+                        } else {
+                            updateUserLocation(userLat, userLng);
+                        }
+                    },
+                    (error) => {
+                        console.error("Error getting user location:", error);
+                        alert("Failed to get your location.");
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        maximumAge: 10000,
+                        timeout: 5000
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
+
+        // Initialize the map and add user location marker
+        function initializeMap(lat, lng) {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 18,
+                center: { lat, lng },
+                disableDefaultUI: true,
+                zoomControl: true,
+                mapTypeControl: true,
+            });
+
+            userLocationMarker = new google.maps.Marker({
+                map: map,
+                position: { lat, lng },
+                icon: {
+                    url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                    scaledSize: new google.maps.Size(40, 40)
+                },
+                title: "Your Location"
+            });
+
+            userLocationCircle = new google.maps.Circle({
+                map: map,
+                center: { lat, lng },
+                radius: 50,
+                fillColor: '#1E90FF',
+                fillOpacity: 0.3,
+                strokeColor: '#1E90FF',
+                strokeOpacity: 0.6,
+                strokeWeight: 2
+            });
+
+            map.setCenter({ lat, lng });
+        }
+
+        // Update the user's location on the map
+        function updateUserLocation(lat, lng) {
+            if (userLocationMarker) {
+                userLocationMarker.setPosition(new google.maps.LatLng(lat, lng));
+            }
+            if (userLocationCircle) {
+                userLocationCircle.setCenter(new google.maps.LatLng(lat, lng));
+            }
+            map.setCenter({ lat, lng });
+        }
+
+        // Initialize and load case data
+        async function initMap() {
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                const response = await fetch('/case-locations');
+                const cases = await response.json();
+
+                if (!Array.isArray(cases)) {
+                    console.error("Failed to load case data:", cases);
+                    alert('Error loading case data.');
+                    return;
+                }
+
+                const mapStyle = [
+                    {
+                        "elementType": "geometry",
+                        "stylers": [
+                            { "color": "#212121" }
+                        ]
+                    },
+                    {
+                        "elementType": "labels.icon",
+                        "stylers": [
+                            { "visibility": "off" }
+                        ]
+                    }
+                ];
+
+                const mapCenter = cases.length > 0
+                    ? { lat: cases[0].latitude, lng: cases[0].longitude }
+                    : { lat: 28.6139, lng: 77.2090 };
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 18,
+                    center: mapCenter,
+                    disableDefaultUI: true,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    styles: mapStyle
+                });
+
+                cases.forEach((caseData) => {
+                    const circle = new google.maps.Circle({
+                        strokeColor: '#FF5733',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: '#FF5733',
+                        fillOpacity: 0.35,
+                        map: map,
+                        center: { lat: caseData.latitude, lng: caseData.longitude },
+                        radius: 5
+                    });
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: ` 
+                            <div style="font-family: Arial, sans-serif; color: #333;">
+                                <p><strong>Message:</strong> ${caseData.description}</p>
+                                <p><strong>Reoporting Date:</strong> ${caseData.upload_date}</p>
+                                <p><strong>Reporting Time:</strong> ${caseData.upload_time}</p>
+                            </div>
+                        `
+                    });
+
+                    circle.addListener('click', () => {
+                        infoWindow.setPosition(circle.getCenter());
+                        infoWindow.open(map);
+                    });
+                });
+            } catch (error) {
+                console.error('Error fetching case data:', error);
+                alert('Failed to load map or case data.');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        window.onload = function() {
+            initMap();
+            getUserLocation();
+        };
+
+        function toggleNav() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
